@@ -1,0 +1,22 @@
+[
+  {
+    "source": "Jama-Tool-Kit\\INCOSE-Assessment-Script-main\\INCOSE-Assessment-Script-main\\src\\incose_assessor\\oslc\\static\\oslc.js",
+    "sha256": "f74de36170ee9688414ba45f51e4e217d44c3f45b9e42c459860c02aed1f1220",
+    "use": "Adapted OSLC handshake/context/service patterns; assessment code excluded"
+  },
+  {
+    "source": "Jama-Tool-Kit\\INCOSE-Assessment-Script-main\\INCOSE-Assessment-Script-main\\src\\incose_assessor\\oslc\\context.py",
+    "sha256": "90365385ebc4ed86d1e8aee79fcb2ebb1d003d01951a7088ec0f260deb51ab08",
+    "use": "Adapted OSLC handshake/context/service patterns; assessment code excluded"
+  },
+  {
+    "source": "Jama-Tool-Kit\\INCOSE-Assessment-Script-main\\INCOSE-Assessment-Script-main\\src\\incose_assessor\\oslc\\server.py",
+    "sha256": "9822e6ad22cfb359920897fb074cd25be8952ee4106f51223f42b05562df168f",
+    "use": "Adapted OSLC handshake/context/service patterns; assessment code excluded"
+  },
+  {
+    "source": "Requirements-to-Hardware\\Scripts\\jama_rest.py",
+    "sha256": "72e66b28d39fbcc71e9f93d246badf14fd93284d733b206d94e1fef1e95ec382",
+    "use": "Copied REST client; no credentials copied"
+  }
+]

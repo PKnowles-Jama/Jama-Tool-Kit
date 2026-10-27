@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "status": "complete",
+  "runId": "00000000-0000-4000-8000-000000000001",
+  "revision": "Synthetic demo",
+  "publishedAt": "2026-10-27T12:00:00Z",
+  "createdAt": "2026-10-27T12:00:00Z",
+  "sourceSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "binding": {
+    "jamaOrigin": "https://a-d-consulting.jamacloud.com",
+    "projectId": 53,
+    "itemId": 1,
+    "summaryId": 1
+  },
+  "units": "m",
+  "upAxis": "Y",
+  "projection": "third-angle",
+  "drawingKind": "undimensioned-visualization",
+  "assets": [
+    {
+      "name": "demo.glb",
+      "role": "model",
+      "mime": "model/gltf-binary",
+      "bytes": 1004,
+      "sha256": "d1dc0533c1996a742a87debb7eb1eb1bbba27602b4282864dfdb719844831482",
+      "attachmentId": 1,
+      "fileId": 1
+    },
+    {
+      "name": "motion.gif",
+      "role": "animation",
+      "mime": "image/gif",
+      "bytes": 6357,
+      "sha256": "1a7e287a926270d310ccbd729b25cc4e9fbebb1550a24c209c7ef9c2fa10cd09",
+      "attachmentId": 2,
+      "fileId": 2,
+      "poster": "poster.png"
+    },
+    {
+      "name": "poster.png",
+      "role": "poster",
+      "mime": "image/png",
+      "bytes": 2151,
+      "sha256": "92a447a53dada2f20d8d673307a1ae80a5938aefbf65911b858ea8dddee8e57f",
+      "attachmentId": 3,
+      "fileId": 3
+    },
+    {
+      "name": "four-view.png",
+      "role": "drawing",
+      "mime": "image/png",
+      "bytes": 7774,
+      "sha256": "39016c4e1526c8b49fc9ad386730ca376ab3ab1f17561fb0b2f6aabd5b826c06",
+      "attachmentId": 4,
+      "fileId": 4
+    }
+  ]
+}

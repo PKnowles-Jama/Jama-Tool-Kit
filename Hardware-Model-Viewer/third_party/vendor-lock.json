@@ -1,0 +1,62 @@
+[
+  {
+    "name": "three",
+    "version": "0.180.0",
+    "url": "https://registry.npmjs.org/three/-/three-0.180.0.tgz",
+    "integrity": "sha512-o+qycAMZrh+TsE01GqWUxUIKR1AL0S8pq7zDkYOQw8GqfX8b8VoCKYUoHbhiX5j+7hr8XsuHDVU6+gkQJQKg9w=="
+  },
+  {
+    "name": "occt-import-js",
+    "version": "0.0.23",
+    "url": "https://registry.npmjs.org/occt-import-js/-/occt-import-js-0.0.23.tgz",
+    "integrity": "sha512-RFfYQXYFX5C1mB1Aywm0ShcUKzXOr/VzTnlzhBSDJOR6YCAPt1HYCzeXWg1vwwjn/cUxwqRNhhtf1dlewoZYCQ=="
+  },
+  {
+    "files": [
+      {
+        "path": "frontend/vendor/occt/LICENSE.md",
+        "sha256": "7ffe1954587c77dfba1cf8eb9b2ea743671fa6e63f9e7a2f258119d42e14eefe"
+      },
+      {
+        "path": "frontend/vendor/occt/occt-import-js.js",
+        "sha256": "3fb44ce11d00611f9b3f3c5775d520ebab48930c1f08279b7b1316f05f0d3379"
+      },
+      {
+        "path": "frontend/vendor/occt/occt-import-js.wasm",
+        "sha256": "33391fc9d94ea5c869a6718488bf0a9a464222bac9bdc764dfe1690cef281952"
+      },
+      {
+        "path": "frontend/vendor/three/build/three.core.js",
+        "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
+      },
+      {
+        "path": "frontend/vendor/three/build/three.module.js",
+        "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
+      },
+      {
+        "path": "frontend/vendor/three/examples/jsm/controls/OrbitControls.js",
+        "sha256": "b45cb15fd75ac22aef3a44828b8b615c7b6d2256e203b7803c120975fe36cd47"
+      },
+      {
+        "path": "frontend/vendor/three/examples/jsm/libs/fflate.module.js",
+        "sha256": "209a4412eb48ce609edb4391992a792ffcc3983d30ee7e2b0b89a8c470f3cd8a"
+      },
+      {
+        "path": "frontend/vendor/three/examples/jsm/loaders/3MFLoader.js",
+        "sha256": "f4b167042a141132189364729c612486fe27f1de4c6d40e074dfe80cebd050cb"
+      },
+      {
+        "path": "frontend/vendor/three/examples/jsm/loaders/GLTFLoader.js",
+        "sha256": "798c46e86802c78454a7a7521a8d02f78e55bc7d61b6a922f224338173108361"
+      },
+      {
+        "path": "frontend/vendor/three/examples/jsm/utils/BufferGeometryUtils.js",
+        "sha256": "710252d92feb6140f6d9acd4b3085dfa088f80618f46d3ac005b449225a11279"
+      },
+      {
+        "path": "frontend/vendor/three/LICENSE",
+        "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+      }
+    ]
+  }
+]

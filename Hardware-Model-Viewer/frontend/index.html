@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jama Hardware Model Viewer</title><link rel="stylesheet" href="/viewer.css"></head>
+<body>
+<header><div><p class="eyebrow">JAMA CONNECT · HARDWARE</p><h1 id="title">Model viewer</h1><p id="metadata">Opening the selected item…</p></div><div class="actions"><button id="refresh">Refresh</button><button id="larger">Open larger view</button><label>Appearance <select id="theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label></div></header>
+<p id="status" role="status" aria-live="polite">Waiting for Jama session.</p>
+<main id="content" hidden>
+<label class="run-picker">Published run <select id="runs"></select></label>
+<details id="model-section" open><summary>Interactive model</summary><div class="section-body"><div id="model-tools"><button data-view="iso">Isometric</button><button data-view="front">Front</button><button data-view="top">Top</button><button data-view="right">Right</button><button data-view="fit">Fit / reset</button><button id="sheet">Save four-view illustration</button></div><div id="canvas-wrap" aria-label="Interactive model. Drag to orbit, right drag to pan, scroll to zoom."><p id="model-message">Expand to load the model.</p><canvas id="canvas"></canvas></div><p class="hint">Drag to orbit · Right drag to pan · Scroll to zoom. Preview geometry is for visualization.</p><div id="sources"></div></div></details>
+<details id="animations-section"><summary id="animations-label">Animations</summary><div class="section-body" id="animations"></div></details>
+<details id="drawings-section"><summary id="drawings-label">Drawings</summary><div class="section-body" id="drawings"></div></details>
+</main><footer>Model, animations, and drawings belong to one published run. Original CAD remains the engineering source.</footer>
+<script type="module" src="/app.js"></script></body></html>

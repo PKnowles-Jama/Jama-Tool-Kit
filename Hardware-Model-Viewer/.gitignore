@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+.test-deps/
+config/local.json
+dist/
+tests/output/
+*.log

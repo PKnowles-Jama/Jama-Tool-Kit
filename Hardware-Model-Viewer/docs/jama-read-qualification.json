@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-10-27T17:09:21.441806+00:00",
+  "jamaOrigin": "https://a-d-consulting.jamacloud.com",
+  "viewerOrigin": "https://models.example.internal",
+  "authenticatedRead": true,
+  "promptItemId": 9782,
+  "promptProject": 53,
+  "corsOptionsStatus": 403,
+  "corsHeaders": {},
+  "staticQualification": "requires browser/host qualification; OPTIONS alone does not prove delegated iframe support",
+  "writesPerformed": false,
+  "selfHostedQualification": "not available in this workspace"
+}

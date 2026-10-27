@@ -1,0 +1,13 @@
+{
+  "jamaOrigin": "https://a-d-consulting.jamacloud.com",
+  "publicOrigin": "https://models.example.internal",
+  "allowedProjectIds": [53],
+  "mode": "adapter",
+  "apiRoot": "/rest/v1",
+  "maxFileBytes": 52428800,
+  "maxTriangles": 1000000,
+  "maxTexturePixels": 16777216,
+  "maxExpandedBytes": 209715200,
+  "maxAttachments": 500,
+  "maxManifestBytes": 1048576
+}

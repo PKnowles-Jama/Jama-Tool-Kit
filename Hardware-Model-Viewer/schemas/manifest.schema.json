@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Jama Hardware Model Viewer manifest version 1",
+  "type": "object",
+  "required": ["schemaVersion", "status", "runId", "binding", "revision", "createdAt", "sourceSha256", "units", "upAxis", "projection", "drawingKind", "assets"],
+  "properties": {
+    "schemaVersion": {"const": 1},
+    "status": {"enum": ["prepared", "complete"]},
+    "runId": {"type": "string", "format": "uuid"},
+    "revision": {"type": "string", "minLength": 1},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "publishedAt": {"type": "string", "format": "date-time"},
+    "sourceSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "units": {"enum": ["mm", "cm", "m", "in", "ft"]},
+    "upAxis": {"enum": ["Y", "Z"]},
+    "projection": {"enum": ["first-angle", "third-angle"]},
+    "drawingKind": {"enum": ["cad-drawing", "undimensioned-visualization"]},
+    "binding": {
+      "type": "object", "required": ["jamaOrigin", "projectId", "itemId", "summaryId"],
+      "additionalProperties": false,
+      "properties": {
+        "jamaOrigin": {"type": "string", "format": "uri"},
+        "projectId": {"type": "integer", "minimum": 1},
+        "itemId": {"type": "integer", "minimum": 1},
+        "summaryId": {"type": "integer", "minimum": 1}
+      }
+    },
+    "assets": {
+      "type": "array", "minItems": 1, "maxItems": 100,
+      "items": {
+        "type": "object", "required": ["name", "role", "mime", "bytes", "sha256"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1, "pattern": "^[^/\\\\:]+$"},
+          "role": {"enum": ["model", "source", "animation", "poster", "drawing", "document"]},
+          "mime": {"type": "string"},
+          "bytes": {"type": "integer", "minimum": 1, "maximum": 52428800},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "attachmentId": {"type": "integer", "minimum": 1},
+          "fileId": {"type": "integer", "minimum": 1},
+          "poster": {"type": "string"}
+        }
+      }
+    }
+  },
+  "allOf": [{"if": {"properties": {"status": {"const": "complete"}}}, "then": {"required": ["publishedAt"], "properties": {"assets": {"items": {"required": ["attachmentId", "fileId"]}}}}}]
+}

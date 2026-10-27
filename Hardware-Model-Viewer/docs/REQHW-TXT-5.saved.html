@@ -1,0 +1,124 @@
+<h1>INTRODUCTION</h1>
+
+<p>The goal of this prompt is to evaluate the features and requirements in a Jama Connect project and use them to generate a meaningful input into Fusion360 via an MCP connection to generate solid models of the described product from the requirements. This prompt will provide the mandatory process and general context needed to complete this effort.</p>
+
+<h1>PROCESS</h1>
+
+<h2>1 GATHER FEATURES &amp; REQUIREMENTS</h2>
+
+<p>Gather all features and their downstream requirements from the original Jama Connect project. ONLY features in the Approved state are included in modeling. Include every related downstream requirement of an Approved feature regardless of the requirement's own status. Gather the full feature and requirement inventory separately for the included/excluded summary table; excluded content must not enter modeling scope.</p>
+
+<p>Use the ad_jama MCP connection for project/type discovery and targeted clarification, assisted by these REST API scripts in C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts:</p>
+
+<ul>
+	<li>C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\gather_requirements.py â€” read-only bulk collection, status lookup resolution, downstream requirement selection, compact modeling input, and complete inclusion inventory.</li>
+	<li>C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\build_summary.py â€” local creation of the formatted implementation summary and REST payload from the collected inventory and actual model analysis report.</li>
+	<li>C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\publish_summary.py â€” validate and publish the summary and relate it only to included items, with resumable write tracking.</li>
+	<li>C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\jama_rest.py â€” shared REST client used by the three entry-point scripts.</li>
+	<li>C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\README.md and C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\requirements.txt â€” setup, complete commands, artifact descriptions, and failure recovery.</li>
+</ul>
+
+<p>Follow README.md for Python dependency setup. Use --credentials "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\info.json" or OAuth environment variables; never print or embed secret values. Create the dated run folder specified in step 2 first, then execute python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\gather_requirements.py" --credentials "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\info.json" --project 53 --output "&lt;run-folder&gt;". Project 53 is the original REQHW project; verify IDs with ad_jama MCP if using this workflow elsewhere.</p>
+
+<p>Read only modeling-packet.json into context initially. It includes complete plain-text content of Approved features and unique related requirements, custom field values, and featureâ€“requirement pairs. Leave source.json (full source HTML/fields and schemas) and coverage.json (all included/excluded inventory and provenance) on disk for the scripts. Inspect specific source items through ad_jama MCP when images, table layout, ambiguous data, or missing dimensions need interpretation. Do not truncate or silently invent requirements. If REST access is unavailable, use paginated ad_jama MCP retrieval with the same inclusion rules and report the limitation.</p>
+
+<p>Deduplicate requirements shared by multiple Approved features for modeling while retaining every featureâ€“requirement pair for the summary. Include Approved features with no downstream requirement; show them in the summary with empty requirement cells. Show requirements with no project feature as excluded with empty feature cells. A requirement shared by Approved and nonapproved features is included for modeling, while its row under the nonapproved feature remains excluded. Cross-project relationships and nonrequirement item types do not expand this run's scope.</p>
+
+<h2>2 CREATE &amp; SAVE MODEL INPUT PROMPT FOR FUSION360</h2>
+
+<p>Create a fully detailed prompt that includes dimensions, material selection, individual part indication, and assembly instructions to create a CAD model that meets the requirements and features specified. Save the model input prompt as a .md file within the folder the user specified when calling this execution prompt in a newly generated folder specific to this execution. The model input prompt must be saved with the following file name convention: Model-Input-Prompt-&lt;YYYY-MM-DD&gt;.md . The specific folder must use the following folder name convention: Requirements-to-Hardware-Run-&lt;YYYY-MM-DD&gt; .</p>
+
+<h2>3 PROVIDE THE PROMPT TO FUSION360</h2>
+
+<p>Using the fusion360 MCP server connection, provide the model input prompt that was just created. Wait for the model to generate and upon final generation, proceed to the next step.</p>
+
+<h2>4 ANALYZE MODEL &amp; CREATE MODEL ANALYSIS REPORT</h2>
+
+<p>Upon completion of model generation, create a model analysis report that details compliance to each individual requirement and feature, or lack thereof if necessary. The report will include the following:</p>
+
+<ul>
+	<li>Model Input Prompt file name and path</li>
+	<li>Model name(s) from Fusion360</li>
+	<li>Dimensions of each part</li>
+	<li>Material selection of each part</li>
+	<li>Analysis against each requirement based on parts</li>
+</ul>
+
+<p>Finally, save the model analysis report with its corresponding model input prompt in the previously generated specific folder. The model analysis report file will use the following file name convention: Model-Analysis-Report-&lt;YYYY-MM-DD&gt;.md .</p>
+
+<h2>5 CREATE IMPLEMENTATION SUMMARY</h2>
+
+<p>Once the model analysis report is finalized, generate an Implementation Summary in the original Jama Connect project that includes the following information:</p>
+
+<ul>
+	<li>Introduction
+	<ul>
+		<li>Who executed this run based on Jama Connect user information</li>
+		<li>When was the run executed: &lt;YYYY-MM-DD&gt; &lt;time&gt;</li>
+	</ul>
+	</li>
+	<li>Features &amp; Requirements
+	<ul>
+		<li>Generate a table of all features and requirements and identify which were included and which were excluded from the run</li>
+		<li>Table Format:
+		<ul>
+			<li>Columns
+			<ul>
+				<li>Inclusion? (If included, write Yes and include a green checkmark emoji, if not included, write No and include a red X emoji)</li>
+				<li>Feature Name</li>
+				<li>Feature ID (must be a hyperlink to that feature)</li>
+				<li>Requirement Name</li>
+				<li>Requirement ID (must be a hyperlink to that requirement)</li>
+			</ul>
+			</li>
+			<li>Every row will correspond to one requirement and its parent feature</li>
+		</ul>
+		</li>
+	</ul>
+	</li>
+	<li>Model Analysis Report
+	<ul>
+		<li>Paste and format the specific model analysis report into the rich text field in such a way that it complies with Jama Connect's rich text field formatting.</li>
+	</ul>
+	</li>
+</ul>
+
+<p>Finally, name the implementation summary with the following format: Requirements to Hardware Summary &lt;YYYY-MM-DD&gt; .</p>
+
+<p>After the actual model analysis report is finalized, execute python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\build_summary.py" --run "&lt;run-folder&gt;" --report "&lt;run-folder&gt;\Model-Analysis-Report-&lt;YYYY-MM-DD&gt;.md" --parent 9691. Set 9691 is the Implementation Summaries set in REQHW; verify its project and child item type through ad_jama MCP. The script uses the Jama user identity and America/Denver run timestamp captured during collection, renders the required five-column table, and converts the Markdown analysis to Jama rich-text HTML. Review implementation-summary.html; the script also produces summary-payload.json and summary-plan.json. It makes no Jama writes. Do not load the entire inclusion inventory or regenerate table markup in model context. Publish the prepared item together with its relationships in step 6; do not create a duplicate item with MCP.</p>
+
+<h2>6 RELATE IMPLEMENTATION SUMMARY</h2>
+
+<p>Once the Implementation Summary is created, relate it directly to all features and requirements it executed with. This explicitly only applies to features and requirements listed as Yes in the Inclusion column.</p>
+
+<p>Before writing, refresh ad_jama MCP project details with traceability enabled, list relationship types, and validate the editable summary fields and destination set. Save the currently confirmed project/TIM rules as &lt;run-folder&gt;\validated-tim.json using the README schema. In project 53 the validated rules are Implementation Summary (133) â†’ Feature (132) and Implementation Summary (133) â†’ Requirement (24), using Related to (4). Reconfirm those values for each execution.</p>
+
+<p>Execute python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\publish_summary.py" --credentials "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\info.json" --run "&lt;run-folder&gt;" --validated-tim "&lt;run-folder&gt;\validated-tim.json" --preflight for read-only live validation. After it passes, execute the same command with --apply in place of --preflight to create the prepared implementation summary and all included-only relationships. These relationships point downstream from the summary to each included feature and each unique included requirement. The script verifies the stored summary and relationship coverage and prints the resulting summary link.</p>
+
+<p>If features, requirements, or featureâ€“requirement relationships changed since collection, stop and reconcile the model/report with a fresh snapshot before publishing. Keep publish-state.json for resumable writes. Reconcile ambiguous POST results in Jama before retrying; never delete the ledger or repeat summary creation blindly. Follow the README recovery instructions. Report the final Jama summary link and the saved model prompt and analysis paths.</p>
+
+<h2>7 PUBLISH INTERACTIVE MODEL VIEWER</h2>
+
+<p>After step 6 completes and the stored summary and included-only relationships are verified, publish the model visualization on that same Implementation Summary. Use the independent tool in C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer. Follow its README.md for dependency setup, deployment, artifact limits, and recovery. Use ad_jama for Jama discovery and verification; do not use Jamaland or JamOS for this workflow.</p>
+
+<p>Require &lt;run-folder&gt;\publish-state.json to contain complete: true, a confirmed numeric summaryId, and pending: null. Retain summary-plan.json and coverage.json. The viewer reads this verified summaryId as its display target. Do not create a second summary, infer an item ID from its title, or modify a feature or requirement. Viewer publication has its own viewer-publish-state.json ledger and must not replace the summary ledger.</p>
+
+<p>Export the completed model revision as a simplified, self-contained GLB preview (uncompressed, embedded buffers/images, without glTF extensions; meters and Y-up preferred), or a supported 3MF mesh preview with explicit units and up-axis. Preserve the original STEP/3MF source for download. If only STEP is available, use the optional local Node.js converter: node "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer\scripts\convert-step.cjs" "&lt;run-folder&gt;\model.step" "&lt;run-folder&gt;\preview.glb". It runs offline and creates a meters/Y-up preview plus a conversion record. Verify geometry, component positions, orientation, units, colors, and simplification against the actual CAD model before publication; do not claim exact-solid compliance from the mesh.</p>
+
+<p>Save any actually generated animations as GIFs in this run. Export an isometric plus front/top/right drawing sheet from the same model revision as PNG/JPEG, with an optional original PDF. State first-angle or third-angle projection. If CAD drawing export is unavailable, create a clearly labeled undimensioned illustration with: python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer\viewer.py" draw --model "&lt;run-folder&gt;\preview.glb" --output "&lt;run-folder&gt;\four-view.png" --up-axis Y --projection third-angle . This fallback does not establish dimensions/tolerances or replace a CAD engineering drawing. Report unavailable animations/drawings explicitly instead of fabricating evidence.</p>
+
+<p>Prepare the package using the actual exported files and actual model revision. Example: python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer\viewer.py" prepare --run "&lt;run-folder&gt;" --model "&lt;run-folder&gt;\preview.glb" --source "&lt;run-folder&gt;\model.step" --gif "&lt;run-folder&gt;\motion.gif" --drawing "&lt;run-folder&gt;\four-view.png" --revision "&lt;actual-CAD-revision&gt;" --units m --up-axis Y --projection third-angle --drawing-kind undimensioned-visualization . Use cad-drawing instead for a CAD-produced sheet. Repeat --source, --gif, --drawing, or --document for multiple artifacts; omit options for files that were not produced. For 3MF, supply its actual units/up-axis. The tool creates posters for GIFs, copies assets into &lt;run-folder&gt;\viewer, hashes them, and binds the prepared manifest to the original instance/project/summary. Existing packages are not overwritten.</p>
+
+<p>Validate offline: python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer\viewer.py" validate --run "&lt;run-folder&gt;" . Then execute read-only preflight: python "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Jama-Tool-Kit\Hardware-Model-Viewer\viewer.py" publish --credentials "C:\Users\PatrickKnowles\OneDrive - Jama Software, Inc\Documents\Coding\Requirements-to-Hardware\Scripts\info.json" --run "&lt;run-folder&gt;" --preflight . After it passes, repeat with --apply in place of --preflight. For another Jama instance, supply the matching --base-url and use that instance's credentials. Never embed secrets in viewer configuration, URLs, or artifacts. Preflight verifies reads and bindings; actual write permission and binary-file allowlists remain enforced by Jama during publication.</p>
+
+<p>The publisher uploads and verifies assets, associates them with the summary, and associates the complete immutable manifest last. Resume an interrupted publication using the same package and viewer ledger. Reconcile ambiguous POST outcomes through Jama before retrying; never delete the ledger or repeat attachment creation blindly. If viewer publication fails, keep the successfully created summary and report the viewer stage as incomplete. Do not recreate the summary or its relationships to recover the viewer.</p>
+
+<p>The customer's configured OSLC launcher at https://&lt;viewer-origin&gt;/spa must receive the selected summary's artifact URL and projectId and support the delegated-session handshake. The viewer displays independently expandable Interactive model, Animations, and Drawings sections inline, with an optional larger Jama drawer. It shows the latest completely published run on open or Refresh; it does not synchronize unsaved CAD changes. Static hosting is supported only where Jama's browser/CORS policy is qualified; otherwise use the supplied native Python read-only adapter behind trusted HTTPS. No model-rendering server, Docker, public viewer SaaS, or runtime CDN is required. The display portion can be hosted in an airgapped environment; replacing the current Fusion360/MCP model-generation chain is a separate integration.</p>
+
+<p>Return the final Jama summary link, model prompt and analysis paths, viewer package path, and viewer publication/verification status. If HTTPS/OSLC registration is not yet available, say that explicitly and do not claim the model was viewed live inside Jama merely because its attachments were published.</p>
+
+<h1>Ground Rules</h1>
+
+<ol>
+	<li>Never modify requirements or features during execution of this prompt.</li>
+</ol>

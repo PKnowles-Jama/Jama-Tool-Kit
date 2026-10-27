@@ -1,0 +1,7 @@
+.git
+.venv
+.test-deps
+config/local.json
+tests/output
+dist
+docs/REQHW-TXT-5*.html

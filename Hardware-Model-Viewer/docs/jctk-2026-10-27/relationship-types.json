@@ -1,0 +1,62 @@
+[
+  {
+    "id": 4,
+    "name": "Related to",
+    "isDefault": true,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 5,
+    "name": "Dependent on",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 6,
+    "name": "Derived from",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 8,
+    "name": "Verified by",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 9,
+    "name": "Mitigated by",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 10,
+    "name": "Caused by",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 11,
+    "name": "Allocated to",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 12,
+    "name": "Validated By",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 13,
+    "name": "Verified By",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  },
+  {
+    "id": 14,
+    "name": "Satisfied By",
+    "isDefault": false,
+    "type": "relationshiptypes"
+  }
+]

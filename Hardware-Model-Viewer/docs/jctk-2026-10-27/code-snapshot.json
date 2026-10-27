@@ -1,0 +1,31 @@
+{
+  "gitHead": "88e88f97366633cf90669728a08c2c09677904e9",
+  "scope": "Actual working-tree content, including staged chat-driven changes; not HEAD alone.",
+  "files": {
+    "README.md": "5a2e72edd0b6bb4871276a0a3e253caab3df3f96c9e3f31f388b7d878eabe05f",
+    "config/viewer.example.json": "cb04ffa6277f31b3181c9392d148cf947153731eb2656d8f22fc5eae19302fbd",
+    "docs/deployment.md": "6f2fee928389b2b5b15db10b3680fb769a03b006476082dd8be64ee77477bffe",
+    "frontend/app.js": "8987c0d93966ed6e19d45eeb4075b5d0299367391108de274562e9c88260bb49",
+    "frontend/archive.js": "dd0195604a96770009e11e414fb699e1f281c6383ab687c0a1e20b0e7de8ac15",
+    "frontend/index.html": "74c8a79d70662e53b25b6f886ca3126b5be1d1d7436883f1c8ef58bd09f6ff63",
+    "frontend/model.js": "fc50358d7d18ba129eeb3da009950bf927d04f4d9335b4a019b2d53fd14250ff",
+    "frontend/step-to-glb.cjs": "b6fc6c08d700c8beb74f6b7fbcb3a172e5eef165a0cf8e7c8703f358cf7d817f",
+    "frontend/transport.js": "b6ed76259643fc2d42d9cbde27deda11eb817fc11b81ca5fdc40e22249609e16",
+    "frontend/viewer.css": "7435faf1805cafe9162967542e1e366db9f549806306181c218f207cacab9654",
+    "schemas/manifest.schema.json": "59d34b1a582ac4985ae327b6a7b63165aff82c1b56025b505ea615dc18ec0634",
+    "scripts/build_release.py": "a94b2c8b835a6b090965e922a833b29ad4854be5f2fd6d7305b5bacb6847e983",
+    "scripts/bundle_vendor.py": "2fc5099029fa1f61b8f2b4327dc1b180d0e6aa87dc36b605ceba0ca4df258ba9",
+    "scripts/convert-step.cjs": "b4ece8d41568dcdfd2703153ebbc008e40c8f31acd18c3ccd576a1bb04295d35",
+    "scripts/verify.py": "2dac9b99859e1858982c41547fc29b123cdb0c8d89867d673520982212f78cd6",
+    "src/jama_model_viewer/__init__.py": "a7d5a8a38cb8467c063263a4a9719406c504893c5f4ec4bf6348b92bcab6dcf6",
+    "src/jama_model_viewer/archive.py": "8402abfeb62162061e22a4cffcfa9fb9ebead76e609b7cf3de5c5a14dae3dfc2",
+    "src/jama_model_viewer/cli.py": "d24a21bddb6ca85915664e9b4192a826f1cd84ba06e2d83ceb5ae4f9f47aae31",
+    "src/jama_model_viewer/core.py": "33c7becafd6d9e9e006df532cc490aad213b4b15b45f13ac2f0a724fe2be28bb",
+    "src/jama_model_viewer/drawing.py": "998db14bd610ca0978ae3f09e28df0000dba72c5c9daf64e5a4707ae901b306b",
+    "src/jama_model_viewer/jama_rest.py": "72e66b28d39fbcc71e9f93d246badf14fd93284d733b206d94e1fef1e95ec382",
+    "src/jama_model_viewer/publisher.py": "4cafcfacdfa6547de20b723ea91d89671141c4ac74c308c2d1a4f2be1542383c",
+    "src/jama_model_viewer/server.py": "bc51e86a98f3797aca5be356e880b58d412c93ddc441ba2b73e4ef3d8a86f8da",
+    "src/jama_model_viewer/service.py": "9c94d75aff2baf8dbd950b66855af4b67e9ad7a54fca39ff517e73fb5cfa207d",
+    "third_party/vendor-lock.json": "cd53a1389f9370a011832f620cd50e8d41b8f35c49d7943d4d4944d5544c5d3c"
+  }
+}

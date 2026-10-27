@@ -8,6 +8,8 @@ The current Cloud probe rejected the illustrative static origin's CORS preflight
 
 ## Start locally
 
+For the existing local installation, follow [Restart the local viewer and Caddy](docs/local-startup.md). It includes the two PowerShell commands and explains which model connections persist after rebooting. The setup commands below are for a new installation.
+
 Python 3.10+ is required. From this folder:
 
 ```powershell

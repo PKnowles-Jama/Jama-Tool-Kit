@@ -1,0 +1,67 @@
+[
+  {
+    "id": 292,
+    "name": "Draft",
+    "description": "",
+    "value": "",
+    "active": true,
+    "archived": false,
+    "color": "CCCCCC",
+    "sortOrder": 1,
+    "pickList": 63,
+    "default": true,
+    "type": "picklistoptions"
+  },
+  {
+    "id": 512,
+    "name": "Under Review",
+    "description": "",
+    "value": "",
+    "active": true,
+    "archived": false,
+    "color": "FFFF66",
+    "sortOrder": 2,
+    "pickList": 63,
+    "default": false,
+    "type": "picklistoptions"
+  },
+  {
+    "id": 293,
+    "name": "Approved",
+    "description": "",
+    "value": "",
+    "active": true,
+    "archived": false,
+    "color": "9CE78C",
+    "sortOrder": 3,
+    "pickList": 63,
+    "default": false,
+    "type": "picklistoptions"
+  },
+  {
+    "id": 294,
+    "name": "Completed",
+    "description": "",
+    "value": "",
+    "active": true,
+    "archived": false,
+    "color": "9BDFFF",
+    "sortOrder": 4,
+    "pickList": 63,
+    "default": false,
+    "type": "picklistoptions"
+  },
+  {
+    "id": 295,
+    "name": "Rejected",
+    "description": "",
+    "value": "",
+    "active": true,
+    "archived": false,
+    "color": "E39191",
+    "sortOrder": 5,
+    "pickList": 63,
+    "default": false,
+    "type": "picklistoptions"
+  }
+]

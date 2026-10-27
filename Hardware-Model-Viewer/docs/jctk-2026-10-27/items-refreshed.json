@@ -1,0 +1,294 @@
+[
+  {
+    "id": 10605,
+    "documentKey": "JCTK-SET-8",
+    "globalId": "GID-56252",
+    "itemType": 31,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "setKey": "TXT",
+      "globalId": "GID-56252",
+      "documentKey": "JCTK-SET-8",
+      "name": "Execution Prompts"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 0,
+      "globalSortOrder": 3218,
+      "sequence": "1",
+      "parent": {
+        "project": 56
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "childItemType": 33,
+    "type": "items"
+  },
+  {
+    "id": 10581,
+    "documentKey": "JCTK-TXT-1",
+    "globalId": "GID-56228",
+    "itemType": 33,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "documentKey": "JCTK-TXT-1",
+      "globalId": "GID-56228",
+      "name": "Execution Prompt - Single Feature",
+      "description": "<p>Please generate an implementation plan for &lt;insert Feature&gt;, it's downstream Requirements. ONLY use requirements that have a status of \"Approved\" if the requirements do not have an approved status, skip them during development.</p>\n\n<p>&nbsp;</p>\n\n<p>Do not run diagnostics, and do not build any testing plans for this development. Testing will be manually completed by the user.</p>\n\n<p>&nbsp;</p>\n\n<p>Upon completion of the development, create an Implementation Summary in the Implementation Summaries Set. The Name field populated as: &lt;insert Feature&gt; Date and Time of development. Add the following into the Description field:</p>\n\n<ul>\n\t<li>Implementation Plan</li>\n\t<li>Tasks</li>\n\t<li>Walkthrough</li>\n</ul>\n\n<p>Please relate the created Implementation Summary to the &lt;insert Feature&gt; item and its related downstream Requirements that were used in this development. If a requirement was skipped during development for not being approved, do not relate it.</p>\n\n<p>&nbsp;</p>\n\n<p>If there were any issues with development, for example, something that could not be coded for a given reason, create a Defect with the Name field populated as &lt;insert Feature&gt; &lt;short keyword description of Defect&gt;. In the Description field, please include a summary of what failed or went wrong and the next steps for the user to take. Please relate the defect to all affected Features, Requirements, and Test Cases.</p>\n"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 0,
+      "globalSortOrder": 5364,
+      "sequence": "1.1",
+      "parent": {
+        "item": 10605
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "type": "items"
+  },
+  {
+    "id": 10606,
+    "documentKey": "JCTK-TXT-4",
+    "globalId": "GID-56253",
+    "itemType": 33,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "documentKey": "JCTK-TXT-4",
+      "globalId": "GID-56253",
+      "name": "Execution Prompt - All Features",
+      "description": "<p>Please generate an implementation plan for all SDD Features that are in the Approved Status, and Text Items in the Features Set. This includes all&nbsp;downstream SDD Requirements from each SDD Feature. ONLY use requirements that have a status of \"Approved\" if the requirements do not have an approved status, skip them during development.&nbsp;If a SDD Feature is not approved, list it as skipped and skip all of its downstream requirements, regardless of their stats.</p>\n\n<p>&nbsp;</p>\n\n<p>Upon completion of the development, create an SDD Implementation Summary in the SDD Implementation Summaries Set. The Name field populated as: Date and Time of development. Add the following into the Description field:</p>\n\n<ul>\n\t<li>Implementation Plan\n\t<ul>\n\t\t<li>Include a table of requirements impacted and requirements skipped</li>\n\t</ul>\n\t</li>\n\t<li>Tasks</li>\n\t<li>Walkthrough</li>\n</ul>\n\n<p>Please relate the created SDD Implementation Summary to all SDD Features and their related downstream SDD Requirements that were used in this development. If a requirement was skipped during development for not being approved, do not relate it.</p>\n\n<p>&nbsp;</p>\n\n<p>If there were any issues with development, for example, something that could not be coded for a given reason, create a Defect with the Name field populated as &lt;insert SDD Feature&gt; &amp; &lt;Insert Specific SDD Requirement&gt; &lt;short keyword description of Defect&gt;. In the Description field, please include a summary of what failed or went wrong and the next steps for the user to take. Please relate the defect to all affected SDD Features, SDD Requirements, and SDD Verifications.</p>\n"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 1,
+      "globalSortOrder": 6437,
+      "sequence": "1.2",
+      "parent": {
+        "item": 10605
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "type": "items"
+  },
+  {
+    "id": 10686,
+    "documentKey": "JCTK-TXT-5",
+    "globalId": "GID-56270",
+    "itemType": 33,
+    "project": 56,
+    "createdDate": "2026-10-27T20:21:37.000+0000",
+    "modifiedDate": "2026-10-27T20:21:37.000+0000",
+    "lastActivityDate": "2026-10-27T20:21:37.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "documentKey": "JCTK-TXT-5",
+      "globalId": "GID-56270",
+      "name": "Generate Features and Requirements From Code",
+      "description": "<h1>INTRODUCTION</h1>\n\n<p>This execution prompt is designed to help facilitate the reverse engineering of features and requirements for a code base. The end goal is to create features and requirements that are missing from the current requirements set within the Jama project that has been identified. By creating these items, a code base will be completely defined by the features and requirement specification stored in Jama Connect.</p>\n\n<p>&nbsp;</p>\n\n<h1>FEATURE FORMAT</h1>\n\n<p>The following defines the format for each feature generated.</p>\n\n<ul>\n\t<li>Features must have a short, meaningful, name that the user will understand the general functionality that is being described by the feature.</li>\n\t<li>Each feature must have a descriptive paragraph or two defining the overall functionality that the requirements related to the feature detail.</li>\n\t<li>Newly generated features by this execution prompt must have a status of draft.</li>\n\t<li>Newly generated features by this execution prompt must be created within the Features set [TAF1APP-SET-1]&nbsp;and within the AI Generated folder [TAF1APP-FLD-23].</li>\n\t<li>Newly generated features must relate to the generated requirements associated with the.</li>\n</ul>\n\n<h1>REQUIREMENT FORMAT</h1>\n\n<p>The following defines the format for each requirement generated.</p>\n\n<ul>\n\t<li>Each requirement must have a short, meaningful, name that the user will understand the general required functionality that is being defined by the requirement.\n\t<ul>\n\t\t<li>For requirements used as definitions, the name must being with \"DEFINITION: \".</li>\n\t</ul>\n\t</li>\n\t<li>The requirements generated must follow this standard format: The application shall &lt;active action verb&gt; &lt;action&gt; &lt;optional parameter or criteria&gt;.</li>\n\t<li>The requirements generated must relate to only ONE feature.</li>\n\t<li>The requirements generated may relate to newly AI Generated features&nbsp;or existing Human Generated features that already reside in the project.</li>\n\t<li>Requirements must be grouped together within Requirements set [TAF1APP-SET-2] within the AI Generated folder [TAF1APP-FLD-25] within the Requirements folder [TAF1APP-FLD-27] within&nbsp;a&nbsp;folder that matches the name of the upstream feature for that requirement.\n\t<ul>\n\t\t<li>The exception to this is when the requirement is being used as a definition, which means they must be housed under the Requirements Set within the AI Generated folder within the Definitions folder [TAF1APP-FLD-26].</li>\n\t</ul>\n\t</li>\n</ul>\n\n<h1>PROCESS</h1>\n\n<ol>\n\t<li>The AI agent shall review the current list of features in the specified Jama project.</li>\n\t<li>The AI agent shall compare the current list of features in the specified Jama project against the existing codebase.</li>\n\t<li>The AI agent shall review the current list of requirements in the specified Jama project.</li>\n\t<li>The AI agent shall compare the current list of requirements in the specified Jama project against the existing codebase.</li>\n\t<li>The AI agent shall provide the user a list of features and requirements it plans to generated within an Implementation Plan (if there is a .md file specifying the approach for this, ensure it is followed).</li>\n\t<li>The AI agent shall, once approved to proceed by the user, generate a baseline of the specified Jama Connect project (from the project top level, not the individual sets)&nbsp;which includes all items within that project.</li>\n\t<li>The AI agent shall title the first baseline in the following way: \"Pre-Generate Features and Requirements &lt;date&gt; &lt;time&gt;\".</li>\n\t<li>The AI agent shall, once approved to proceed by the user, create the features and requirements, along with relationships between each feature and its associated requirements in Jama Connect.</li>\n\t<li>The AI agent shall generate an Implementation Summary and relate it to the features and requirements generated during this execution, with the following information included:\n\t<ul>\n\t\t<li>A copy paste of the implementation plan generated that the user approved</li>\n\t\t<li>A copy paste of the tasks file created</li>\n\t\t<li>A copy paste of the walkthrough file created</li>\n\t</ul>\n\t</li>\n\t<li>The AI agent shall generate a baseline of the specified Jama Connect project (from the project top level, not the individual sets) which includes all items within that project.</li>\n\t<li>The AI agent shall title the second baseline in the following way: \"Post-Generate Features and Requirements &lt;date&gt; &lt;time&gt;\".</li>\n</ol>\n"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 2,
+      "globalSortOrder": 6973,
+      "sequence": "1.3",
+      "parent": {
+        "item": 10605
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "type": "items"
+  },
+  {
+    "id": 10596,
+    "documentKey": "JCTK-SET-7",
+    "globalId": "GID-56243",
+    "itemType": 31,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "setKey": "SUM",
+      "globalId": "GID-56243",
+      "documentKey": "JCTK-SET-7",
+      "name": "Implementation Summaries",
+      "description": "<p>Implementation summaries generated during SDD feature development.</p>\n"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 1,
+      "globalSortOrder": 7510,
+      "sequence": "2",
+      "parent": {
+        "project": 56
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "childItemType": 133,
+    "type": "items"
+  },
+  {
+    "id": 10577,
+    "documentKey": "JCTK-SET-1",
+    "globalId": "GID-56224",
+    "itemType": 31,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "setKey": "FEAT",
+      "globalId": "GID-56224",
+      "documentKey": "JCTK-SET-1",
+      "name": "Features"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 2,
+      "globalSortOrder": 12875,
+      "sequence": "3",
+      "parent": {
+        "project": 56
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "childItemType": 132,
+    "type": "items"
+  },
+  {
+    "id": 10578,
+    "documentKey": "JCTK-SET-2",
+    "globalId": "GID-56225",
+    "itemType": 31,
+    "project": 56,
+    "createdDate": "2026-10-27T17:02:10.000+0000",
+    "modifiedDate": "2026-10-27T17:02:10.000+0000",
+    "lastActivityDate": "2026-10-27T17:02:10.000+0000",
+    "createdBy": 13,
+    "modifiedBy": 13,
+    "fields": {
+      "setKey": "REQ",
+      "globalId": "GID-56225",
+      "documentKey": "JCTK-SET-2",
+      "name": "Requirements"
+    },
+    "resources": {
+      "self": {
+        "allowed": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE"
+        ]
+      }
+    },
+    "version": 1,
+    "location": {
+      "sortOrder": 3,
+      "globalSortOrder": 15021,
+      "sequence": "4",
+      "parent": {
+        "project": 56
+      }
+    },
+    "lock": {
+      "locked": false
+    },
+    "childItemType": 24,
+    "type": "items"
+  }
+]

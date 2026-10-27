@@ -1,0 +1,83 @@
+[
+  {
+    "id": 1,
+    "name": "Specification Driven Development",
+    "isExclusive": false,
+    "mappedProjects": [
+      {
+        "id": 51,
+        "projectKey": "SDD",
+        "name": "SDD Demonstration",
+        "active": true
+      },
+      {
+        "id": 52,
+        "projectKey": "SRR",
+        "name": "Systems Requirement Review MCP Demo",
+        "active": true
+      },
+      {
+        "id": 53,
+        "projectKey": "REQHW",
+        "name": "Requirements to Hardware Demonstration",
+        "active": true
+      },
+      {
+        "id": 55,
+        "projectKey": "SOFT",
+        "name": "Software Requirements Generation Demo",
+        "active": true
+      },
+      {
+        "id": 56,
+        "projectKey": "JCTK",
+        "name": "Jama Connect Tool Kit",
+        "active": true
+      }
+    ],
+    "rules": [
+      {
+        "id": 7,
+        "fromItemTypeId": 132,
+        "toItemTypeId": 24,
+        "forCoverage": true,
+        "relationshipTypeId": 4
+      },
+      {
+        "id": 8,
+        "fromItemTypeId": 24,
+        "toItemTypeId": 26,
+        "forCoverage": true,
+        "relationshipTypeId": 13
+      },
+      {
+        "id": 9,
+        "fromItemTypeId": 26,
+        "toItemTypeId": 27,
+        "forCoverage": false,
+        "relationshipTypeId": 4
+      },
+      {
+        "id": 10,
+        "fromItemTypeId": 133,
+        "toItemTypeId": 24,
+        "forCoverage": true,
+        "relationshipTypeId": 4
+      },
+      {
+        "id": 11,
+        "fromItemTypeId": 133,
+        "toItemTypeId": 132,
+        "forCoverage": true,
+        "relationshipTypeId": 4
+      },
+      {
+        "id": 12,
+        "fromItemTypeId": 132,
+        "toItemTypeId": 27,
+        "forCoverage": false,
+        "relationshipTypeId": 4
+      }
+    ]
+  }
+]

@@ -1,0 +1,1484 @@
+{
+  "projectId": 56,
+  "promptItemId": 10686,
+  "promptKey": "JCTK-TXT-5",
+  "application": "Hardware-Model-Viewer",
+  "status": "awaiting-plan-approval",
+  "draftStatusOptionId": 292,
+  "sets": {
+    "features": 10577,
+    "requirements": 10578,
+    "summaries": 10596
+  },
+  "relationshipTypeId": 4,
+  "features": [
+    {
+      "key": "F01",
+      "name": "Jama Item Launch and User Session",
+      "description": "Open the hardware viewer in the context of the Jama item selected by the user. Validate the launching instance and project, obtain the active user's delegated session, and retain that session only for the current browser interaction. Clear protected content when Jama rejects access and prevent stale asynchronous responses from restoring data from a previous run or session.",
+      "evidence": [
+        "frontend/app.js",
+        "frontend/transport.js",
+        "src/jama_model_viewer/server.py"
+      ],
+      "requirements": [
+        {
+          "key": "F01-R01",
+          "name": "Launch context",
+          "description": "The application shall accept the artifact URL, projectId, optional name, and optional drawer handoff as its supported launcher parameters.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R02",
+          "name": "Duplicate parameter rejection",
+          "description": "The application shall reject launcher URLs containing an unknown parameter or repeated parameter name.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R03",
+          "name": "Trusted Jama origin",
+          "description": "The application shall reject a launcher artifact whose HTTPS origin differs from the configured Jama origin.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R04",
+          "name": "Allowed project launch",
+          "description": "The application shall reject a launcher project identifier that is not a safe integer in the configured project allowlist.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R05",
+          "name": "Delegated token handshake",
+          "description": "The application shall request the active user token from the Jama parent using the oslcLoadIframe message.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R06",
+          "name": "Parent message validation",
+          "description": "The application shall accept launcher token messages only from the configured Jama origin and the embedding parent window.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R07",
+          "name": "Session handshake timeout",
+          "description": "The application shall report a session timeout when the launcher token or drawer handoff is not received within 10 seconds.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R08",
+          "name": "Session memory",
+          "description": "The application shall retain the delegated token in browser memory rather than in launcher URLs or persistent browser storage.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R09",
+          "name": "Denied session cleanup",
+          "description": "The application shall clear the displayed protected content and in-memory token when an authenticated read returns HTTP 401 or 403.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        },
+        {
+          "key": "F01-R10",
+          "name": "Stale result rejection",
+          "description": "The application shall discard an artifact result when its selected run or session epoch has changed before the read completes.",
+          "featureKey": "F01",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/server.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F02",
+      "name": "Embedded Workspace and Appearance",
+      "description": "Present the viewer inline in Jama and offer a larger view using the host's native drawer contract. Keep user-facing item and revision information visible, provide clear loading and error messages, and support a locally remembered light, dark, or system appearance without persisting Jama content.",
+      "evidence": [
+        "frontend/index.html",
+        "frontend/app.js",
+        "frontend/viewer.css"
+      ],
+      "requirements": [
+        {
+          "key": "F02-R01",
+          "name": "Inline workspace",
+          "description": "The application shall display the hardware workspace inside the launching OSLC iframe.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R02",
+          "name": "Larger Jama view",
+          "description": "The application shall request the larger Jama drawer with the showDUI message when the user selects Open larger view.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R03",
+          "name": "Drawer token handoff",
+          "description": "The application shall transfer the session to the same-origin drawer through a random 128-bit BroadcastChannel handoff identifier.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R04",
+          "name": "Handoff completion",
+          "description": "The application shall close a launcher handoff channel after its token response or its 10-second expiry.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R05",
+          "name": "Item identification",
+          "description": "The application shall display the selected Jama item key and item name after context retrieval succeeds.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R06",
+          "name": "Revision identification",
+          "description": "The application shall display the selected run revision, publication time, units, and run identifier.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R07",
+          "name": "Appearance choices",
+          "description": "The application shall provide System, Light, and Dark appearance choices.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R08",
+          "name": "Appearance persistence",
+          "description": "The application shall persist only the selected appearance value under the viewer-specific browser theme key.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        },
+        {
+          "key": "F02-R09",
+          "name": "Iframe sizing",
+          "description": "The application shall request an inline iframe height between 400 and 1000 pixels based on the current content height.",
+          "featureKey": "F02",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "frontend/viewer.css"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F03",
+      "name": "Interactive Model Viewing",
+      "description": "Display one or more published GLB or 3MF model previews with independent controls. Let the user freely rotate the camera and rotate each model explicitly around X, Y, and Z, while retaining fit/reset and standard viewpoints. Load models on demand and release renderer resources when the selected run changes.",
+      "evidence": [
+        "frontend/model.js",
+        "frontend/app.js",
+        "frontend/transport.js",
+        "src/jama_model_viewer/core.py"
+      ],
+      "requirements": [
+        {
+          "key": "F03-R01",
+          "name": "Preview formats",
+          "description": "The application shall render published self-contained GLB and supported 3MF model previews in the browser.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R02",
+          "name": "Model count",
+          "description": "The application shall accept between 1 and 20 model previews in a published run.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R03",
+          "name": "Single model expander",
+          "description": "The application shall display a single model directly inside the model section without a nested model expander.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R04",
+          "name": "Multiple model expanders",
+          "description": "The application shall display an individual nested expander for each model when a run contains two or more models.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R05",
+          "name": "Free camera rotation",
+          "description": "The application shall provide trackball camera rotation without a fixed-up orbit restriction.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R06",
+          "name": "Three-axis model rotation",
+          "description": "The application shall provide independent X, Y, and Z model rotation sliders from minus 180 to plus 180 degrees in one-degree increments.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R07",
+          "name": "Standard viewpoints",
+          "description": "The application shall provide Isometric, Front, Top, and Right camera actions for each model.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R08",
+          "name": "Fit and reset",
+          "description": "The application shall reset the model rotation sliders to zero and restore the fitted isometric viewpoint when Fit / reset is selected.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R09",
+          "name": "Pan and zoom",
+          "description": "The application shall support right-button drag panning and scroll-based zoom within each model canvas.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R10",
+          "name": "Lazy model loading",
+          "description": "The application shall load a model preview only when its outer section and any applicable nested expander are open.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R11",
+          "name": "Hidden rendering suspension",
+          "description": "The application shall suspend model rendering while its section is closed or the browser document is hidden.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F03-R12",
+          "name": "Model resource cleanup",
+          "description": "The application shall dispose the model geometry, materials, textures, controls, resize observer, and renderer when replacing its run.",
+          "featureKey": "F03",
+          "evidence": [
+            "frontend/model.js",
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/core.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F04",
+      "name": "GIF Animation Playback",
+      "description": "Show published GIF animations with an initial still poster and explicit playback controls. Keep the single-animation view compact, group multiple animations in independent nested sections, and stop playback when the relevant section is closed or the page is hidden.",
+      "evidence": [
+        "frontend/app.js",
+        "src/jama_model_viewer/publisher.py",
+        "src/jama_model_viewer/core.py"
+      ],
+      "requirements": [
+        {
+          "key": "F04-R01",
+          "name": "Animation poster",
+          "description": "The application shall display the declared PNG or JPEG poster before starting a published GIF.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R02",
+          "name": "Explicit playback",
+          "description": "The application shall start a GIF only after the user selects its Play action.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R03",
+          "name": "Stop playback",
+          "description": "The application shall replace a playing GIF with its poster when the user selects Stop.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R04",
+          "name": "Single animation expander",
+          "description": "The application shall display a single GIF directly inside the Animations section without a nested animation expander.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R05",
+          "name": "Multiple animation expanders",
+          "description": "The application shall display an individual nested expander for each GIF when a run contains two or more animations.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R06",
+          "name": "Collapse playback stop",
+          "description": "The application shall stop a GIF when its own nested expander or the outer Animations section is closed.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R07",
+          "name": "Hidden page playback stop",
+          "description": "The application shall stop GIF playback when the browser document becomes hidden.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        },
+        {
+          "key": "F04-R08",
+          "name": "Missing animation message",
+          "description": "The application shall display an explicit no-animations message when the selected run declares no GIF assets.",
+          "featureKey": "F04",
+          "evidence": [
+            "frontend/app.js",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F05",
+      "name": "Published Run Discovery and Downloads",
+      "description": "Resolve complete publications belonging to the selected Jama item and let the user choose between retained runs. Retrieve the original asset bytes for rendering or download while preventing files from different instances, projects, items, or runs from being combined.",
+      "evidence": [
+        "frontend/app.js",
+        "frontend/transport.js",
+        "src/jama_model_viewer/service.py"
+      ],
+      "requirements": [
+        {
+          "key": "F05-R01",
+          "name": "Manifest discovery",
+          "description": "The application shall discover viewer publications using item-associated attachments whose title starts with JHMV manifest v1 followed by the run identifier.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R02",
+          "name": "Complete run selection",
+          "description": "The application shall offer only manifests with the supported schema version and complete publication status.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R03",
+          "name": "Deterministic run order",
+          "description": "The application shall order discovered runs by descending UTC publication timestamp and then descending run identifier.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R04",
+          "name": "Run refresh",
+          "description": "The application shall reread the published run inventory on initial launch and when the user selects Refresh.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R05",
+          "name": "Run selector",
+          "description": "The application shall replace the displayed assets with those of the run selected in the Published run control.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R06",
+          "name": "Missing publication message",
+          "description": "The application shall instruct the user to complete step 7 when no complete viewer publication is found on the item.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R07",
+          "name": "Original file downloads",
+          "description": "The application shall provide download actions for each model preview, source CAD asset, and GIF using the original manifest filename.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        },
+        {
+          "key": "F05-R08",
+          "name": "Run isolation",
+          "description": "The application shall bind each requested asset to the selected manifest run identifier and exact asset name.",
+          "featureKey": "F05",
+          "evidence": [
+            "frontend/app.js",
+            "frontend/transport.js",
+            "src/jama_model_viewer/service.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F06",
+      "name": "Artifact Package Preparation",
+      "description": "Prepare a reproducible viewer package from exported model files and optional source CAD and GIFs after the existing summary publication has finished. Capture the source requirements snapshot and file hashes so changed inputs cannot be silently published as the prepared run. Produce posters automatically and validate local filenames and supported encodings before writes.",
+      "evidence": [
+        "src/jama_model_viewer/publisher.py",
+        "src/jama_model_viewer/core.py",
+        "src/jama_model_viewer/cli.py"
+      ],
+      "requirements": [
+        {
+          "key": "F06-R01",
+          "name": "Completed summary prerequisite",
+          "description": "The application shall require a completed summary ledger with a positive numeric summaryId and no pending summary operation before preparing a viewer package.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R02",
+          "name": "Summary item binding",
+          "description": "The application shall derive the package instance, project, and display item from the completed summary plan and ledger.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R03",
+          "name": "Repeated model inputs",
+          "description": "The application shall accept repeated --model options when preparing multiple previews for one run.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R04",
+          "name": "Optional source and GIF inputs",
+          "description": "The application shall accept repeated optional source CAD and GIF paths for package preparation.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R05",
+          "name": "Package identity",
+          "description": "The application shall assign a UUID run identifier and record the model revision, creation timestamp, units, and up-axis in the prepared manifest.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R06",
+          "name": "Snapshot digest",
+          "description": "The application shall record the SHA-256 of coverage.json as the prepared package source snapshot digest.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R07",
+          "name": "Artifact fingerprints",
+          "description": "The application shall record each packaged asset's filename, role, MIME type, byte length, and SHA-256.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R08",
+          "name": "Poster generation",
+          "description": "The application shall generate a PNG poster from the first frame of each input GIF and reference that poster from the GIF manifest entry.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R09",
+          "name": "Package overwrite prevention",
+          "description": "The application shall refuse preparation when the run already contains manifest.prepared.json.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R10",
+          "name": "Filename safety",
+          "description": "The application shall reject artifact paths that do not resolve to a simple filename within the viewer package directory.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R11",
+          "name": "Image and file bounds",
+          "description": "The application shall reject a preparation input exceeding 50 MiB or a raster image exceeding 16777216 pixels.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R12",
+          "name": "Encoding validation",
+          "description": "The application shall reject raster files whose detected encoding differs from the declared filename extension.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        },
+        {
+          "key": "F06-R13",
+          "name": "Changed input rejection",
+          "description": "The application shall reject validation when a packaged file fingerprint or the coverage.json digest differs from its prepared value.",
+          "featureKey": "F06",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F07",
+      "name": "Resumable Jama Publication",
+      "description": "Publish viewer attachments onto the verified existing summary as a separate operation from model generation and summary creation. Support read-only preflight, resumable per-file state, verified uploads and associations, and a final manifest association that makes the complete run discoverable. Stop on unresolved write outcomes rather than duplicating Jama items.",
+      "evidence": [
+        "src/jama_model_viewer/publisher.py",
+        "src/jama_model_viewer/cli.py",
+        "src/jama_model_viewer/jama_rest.py"
+      ],
+      "requirements": [
+        {
+          "key": "F07-R01",
+          "name": "Read-only preflight",
+          "description": "The application shall validate the local package and read the live destination and attachment inventory without creating attachments when --preflight is selected.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R02",
+          "name": "Explicit apply mode",
+          "description": "The application shall require the publish command to specify either --preflight or --apply.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R03",
+          "name": "Destination verification",
+          "description": "The application shall reject publication when the connection origin or live destination project differs from the package binding.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R04",
+          "name": "Separate publication ledger",
+          "description": "The application shall record viewer attachment operations in viewer-publish-state.json without replacing the existing summary ledger.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R05",
+          "name": "Package ledger binding",
+          "description": "The application shall reject a publication ledger whose canonical prepared-manifest digest differs from the current package.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R06",
+          "name": "Confirmed upload reuse",
+          "description": "The application shall reuse a confirmed attachment identifier and uploaded representation when resuming the same package.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R07",
+          "name": "Ambiguous creation stop",
+          "description": "The application shall stop when an attachment creation remains pending without a confirmed attachment identifier.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R08",
+          "name": "Upload verification",
+          "description": "The application shall read back each stored attachment and verify its filename, stored length, and SHA-256 before associating it.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R09",
+          "name": "Association recovery",
+          "description": "The application shall check the current item attachment inventory before repeating a pending association operation.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R10",
+          "name": "Manifest publication order",
+          "description": "The application shall associate the complete immutable manifest only after all declared assets have been uploaded and associated successfully.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R11",
+          "name": "Viewer failure isolation",
+          "description": "The application shall leave the existing summary and its feature and requirement relationships intact when viewer publication fails.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R12",
+          "name": "Publisher concurrency lock",
+          "description": "The application shall reject a second publisher using the same run while viewer-publish.lock exists.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        },
+        {
+          "key": "F07-R13",
+          "name": "Read retry policy",
+          "description": "The application shall retry transient GET failures within the REST client's four-attempt limit without automatically retrying non-GET writes.",
+          "featureKey": "F07",
+          "evidence": [
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/jama_rest.py"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F08",
+      "name": "Protected Attachment Access",
+      "description": "Keep Jama user permissions authoritative for model and animation access. Restrict the adapter to bounded reads against the configured Jama instance, validate exact item and attachment bindings, and prevent the read endpoints from becoming a general proxy. Return useful access errors without logging user tokens or customer content.",
+      "evidence": [
+        "src/jama_model_viewer/service.py",
+        "src/jama_model_viewer/server.py",
+        "frontend/transport.js"
+      ],
+      "requirements": [
+        {
+          "key": "F08-R01",
+          "name": "Authenticated API access",
+          "description": "The application shall require a nonempty whitespace-free bearer token of at most 8192 characters on protected adapter requests.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R02",
+          "name": "Application origin check",
+          "description": "The application shall reject adapter API requests whose Origin differs from the configured public origin.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R03",
+          "name": "API request bounds",
+          "description": "The application shall reject protected API bodies exceeding 16384 bytes or using a non-JSON content type.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R04",
+          "name": "Fixed read endpoints",
+          "description": "The application shall expose only /api/context and /api/asset as authenticated adapter operations.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R05",
+          "name": "Live item authorization",
+          "description": "The application shall read the requested Jama item with the supplied user token before resolving its published assets.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R06",
+          "name": "Manifest item binding",
+          "description": "The application shall reject a manifest whose Jama origin, project, display item, or summary identifier differs from the selected item context.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R07",
+          "name": "Attachment association check",
+          "description": "The application shall reject a manifest or asset that refers to an attachment not currently associated with the selected item.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R08",
+          "name": "Attachment identity check",
+          "description": "The application shall verify the asset's live project, stored file identifier, and exact stored filename against its manifest before returning bytes.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R09",
+          "name": "Content integrity check",
+          "description": "The application shall reject asset bytes whose length or SHA-256 differs from the published manifest.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R10",
+          "name": "TLS and redirect policy",
+          "description": "The application shall retain HTTPS certificate verification and reject redirects when the adapter reads Jama resources.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R11",
+          "name": "Bounded discovery",
+          "description": "The application shall reject inventories exceeding the configured attachment limit or containing more than 30 viewer manifest associations.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R12",
+          "name": "Protected response headers",
+          "description": "The application shall send no-store, nosniff, no-referrer, and a content security policy restricting embedding to the configured Jama origin on adapter responses.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F08-R13",
+          "name": "Private process logging",
+          "description": "The application shall suppress native adapter request logging of query strings, bearer headers, and customer content.",
+          "featureKey": "F08",
+          "evidence": [
+            "src/jama_model_viewer/service.py",
+            "src/jama_model_viewer/server.py",
+            "frontend/transport.js"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F09",
+      "name": "Jama ZIP Storage Compatibility",
+      "description": "Store model, source CAD, and manifest files in genuine ZIP containers when their original extensions are unsuitable for direct Jama attachment upload. Preserve original filenames and hashes for user downloads, validate the stored container separately, and bound extraction to the single declared file. Continue reading earlier direct-file publications.",
+      "evidence": [
+        "src/jama_model_viewer/archive.py",
+        "src/jama_model_viewer/publisher.py",
+        "src/jama_model_viewer/service.py",
+        "frontend/archive.js",
+        "frontend/transport.js"
+      ],
+      "requirements": [
+        {
+          "key": "F09-R01",
+          "name": "ZIP publication formats",
+          "description": "The application shall store new GLB, 3MF, STEP, STP, and manifest JSON uploads in ZIP containers while leaving ordinary GIF and image uploads direct.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R02",
+          "name": "Deterministic ZIP bytes",
+          "description": "The application shall create identical ZIP bytes for identical original filenames and contents by using fixed archive metadata.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R03",
+          "name": "Container fingerprints",
+          "description": "The application shall record the stored ZIP name, byte length, encoding, and SHA-256 alongside the original asset metadata.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R04",
+          "name": "Single-entry extraction",
+          "description": "The application shall extract a ZIP only when it contains exactly the expected original filename.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R05",
+          "name": "ZIP expansion bound",
+          "description": "The application shall reject encrypted ZIP content or an uncompressed entry exceeding the configured extraction limit.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R06",
+          "name": "Original asset restoration",
+          "description": "The application shall verify both the stored ZIP hash and extracted original hash before rendering or downloading a container-backed asset.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        },
+        {
+          "key": "F09-R07",
+          "name": "Earlier publication compatibility",
+          "description": "The application shall retain support for already-confirmed direct-file uploads when reading or resuming older publications.",
+          "featureKey": "F09",
+          "evidence": [
+            "src/jama_model_viewer/archive.py",
+            "src/jama_model_viewer/publisher.py",
+            "src/jama_model_viewer/service.py",
+            "frontend/archive.js",
+            "frontend/transport.js"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F10",
+      "name": "Local STEP Preview Conversion",
+      "description": "Convert an exported STEP model into an embedded GLB mesh using the locally bundled OCCT importer. Keep conversion outside the viewing service, normalize coordinates for the viewer, and record the settings and limitations of the resulting visualization. Preserve the original source as the engineering reference.",
+      "evidence": [
+        "scripts/convert-step.cjs",
+        "frontend/step-to-glb.cjs",
+        "README.md"
+      ],
+      "requirements": [
+        {
+          "key": "F10-R01",
+          "name": "Local STEP conversion",
+          "description": "The application shall convert a local .step or .stp input into a self-contained GLB without an online conversion service.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R02",
+          "name": "Conversion input bounds",
+          "description": "The application shall reject STEP conversion inputs larger than 50 MiB.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R03",
+          "name": "Conversion timeout",
+          "description": "The application shall terminate the conversion process when it exceeds 120 seconds.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R04",
+          "name": "Triangle conversion budget",
+          "description": "The application shall reject converted output exceeding one million triangles.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R05",
+          "name": "Conversion coordinates",
+          "description": "The application shall write converted positions and normals in meters with a Y-up orientation.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R06",
+          "name": "Conversion output safety",
+          "description": "The application shall refuse to overwrite an existing GLB output file.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R07",
+          "name": "Conversion provenance",
+          "description": "The application shall write a companion conversion record identifying the source, output, converter version, units, axes, and tessellation settings.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        },
+        {
+          "key": "F10-R08",
+          "name": "Appearance fidelity scope",
+          "description": "The application shall preserve supported mesh base colors during STEP conversion without claiming that omitted source image decals were recovered.",
+          "featureKey": "F10",
+          "evidence": [
+            "scripts/convert-step.cjs",
+            "frontend/step-to-glb.cjs",
+            "README.md"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F11",
+      "name": "Offline Deployment and Release Packaging",
+      "description": "Provide the same viewer assets for a native customer-hosted adapter or a qualified static deployment. Bundle browser libraries and offline installation dependencies, expose local health checks, and package releases from selected source locations. Keep rendering in the browser and document the HTTPS, browser permission, and Jama registration prerequisites separately from model generation.",
+      "evidence": [
+        "src/jama_model_viewer/server.py",
+        "src/jama_model_viewer/service.py",
+        "scripts/build_release.py",
+        "scripts/bundle_vendor.py",
+        "scripts/verify.py",
+        "docs/deployment.md"
+      ],
+      "requirements": [
+        {
+          "key": "F11-R01",
+          "name": "Deployment modes",
+          "description": "The application shall support configured adapter mode and static mode using the same browser viewer.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R02",
+          "name": "Native service",
+          "description": "The application shall serve the adapter as a Python process bound by default to 127.0.0.1 on port 8090.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R03",
+          "name": "Health endpoint",
+          "description": "The application shall return a JSON ok status from /health while the native service is running.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R04",
+          "name": "Local browser libraries",
+          "description": "The application shall load required browser libraries from the packaged application origin without a runtime CDN dependency.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R05",
+          "name": "Offline Python installation",
+          "description": "The application shall supply pinned Python requirements and support installation from target-compatible local wheels without contacting a package index.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R06",
+          "name": "Native and static archives",
+          "description": "The application shall produce separate native and static viewer release ZIP archives.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R07",
+          "name": "Release checksums",
+          "description": "The application shall write SHA-256 checksum files for both release ZIP archives and a per-file checksum inventory in the native release.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R08",
+          "name": "Credential file exclusion",
+          "description": "The application shall exclude config/local.json and files outside the release builder's selected source paths from the release archives.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R09",
+          "name": "Synthetic demo isolation",
+          "description": "The application shall serve synthetic demo assets only when the native service is started with the explicit --demo option.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        },
+        {
+          "key": "F11-R10",
+          "name": "Regression command failure",
+          "description": "The application shall stop the verification runner on the first failing unit-test or browser-test subprocess.",
+          "featureKey": "F11",
+          "evidence": [
+            "src/jama_model_viewer/server.py",
+            "src/jama_model_viewer/service.py",
+            "scripts/build_release.py",
+            "scripts/bundle_vendor.py",
+            "scripts/verify.py",
+            "docs/deployment.md"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "F12",
+      "name": "Legacy Package Compatibility",
+      "description": "Read previously published manifests without restoring the drawing user interface that was removed at the user's request. Preserve compatibility options needed by older automation while keeping the current viewer limited to models, source downloads, and GIF animations.",
+      "evidence": [
+        "frontend/index.html",
+        "frontend/app.js",
+        "src/jama_model_viewer/core.py",
+        "src/jama_model_viewer/cli.py",
+        "src/jama_model_viewer/drawing.py"
+      ],
+      "requirements": [
+        {
+          "key": "F12-R01",
+          "name": "Drawing user interface removal",
+          "description": "The application shall omit the Drawings section and the Save four-view illustration action from the embedded workspace.",
+          "featureKey": "F12",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/drawing.py"
+          ]
+        },
+        {
+          "key": "F12-R02",
+          "name": "Legacy manifest entries",
+          "description": "The application shall accept supported drawing and document manifest entries without displaying them in the current viewer.",
+          "featureKey": "F12",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/drawing.py"
+          ]
+        },
+        {
+          "key": "F12-R03",
+          "name": "Legacy command compatibility",
+          "description": "The application shall retain the existing offline draw command and drawing-related preparation options for older automation without reintroducing a drawing panel.",
+          "featureKey": "F12",
+          "evidence": [
+            "frontend/index.html",
+            "frontend/app.js",
+            "src/jama_model_viewer/core.py",
+            "src/jama_model_viewer/cli.py",
+            "src/jama_model_viewer/drawing.py"
+          ]
+        }
+      ]
+    }
+  ]
+}

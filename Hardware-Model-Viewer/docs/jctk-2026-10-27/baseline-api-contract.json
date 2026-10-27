@@ -1,0 +1,77 @@
+{
+  "source": "https://a-d-consulting.jamacloud.com/rest/labs/api-docs",
+  "postPath": "/rest/labs/baselines",
+  "operation": {
+    "tags": [
+      "baselines"
+    ],
+    "summary": "Add baseline",
+    "operationId": "createBaseline",
+    "requestBody": {
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/RequestBaseline"
+          }
+        }
+      },
+      "required": true
+    },
+    "responses": {
+      "201": {
+        "description": "Created",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MetaWrapper"
+            }
+          }
+        }
+      }
+    }
+  },
+  "requestSchema": {
+    "required": [
+      "name",
+      "source"
+    ],
+    "type": "object",
+    "properties": {
+      "source": {
+        "type": "integer",
+        "description": "ID of the source that the baseline is part of",
+        "format": "int32"
+      },
+      "baselineOriginType": {
+        "type": "string",
+        "description": "The origin of items type",
+        "enum": [
+          "PROJECT",
+          "ITEM",
+          "FILTER",
+          "RELEASE",
+          "SIMPLE_FILTER"
+        ]
+      },
+      "baselineOriginId": {
+        "type": "integer",
+        "description": "The origin of items ID",
+        "format": "int32"
+      },
+      "name": {
+        "type": "string",
+        "description": "Name of the baseline"
+      },
+      "description": {
+        "type": "string",
+        "description": "Description of the baseline"
+      },
+      "baselineStatusPickListOption": {
+        "type": "integer",
+        "description": "The baseline status pick list option",
+        "format": "int32"
+      }
+    }
+  },
+  "observedContract": "For the first baseline, omit source and supply baselineOriginType PROJECT plus baselineOriginId 56. The source field refers to an existing baseline-source ID, not a project ID. Actual response and project-root coverage are saved separately."
+}

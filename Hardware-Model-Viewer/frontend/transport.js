@@ -1,3 +1,4 @@
+import {unpack} from './archive.js';
 // Static mode deliberately implements the same bounded read contract as the adapter.
 export class Transport {
   constructor(config, token, context, invalidate) { Object.assign(this, {config,token,context,invalidate}); }
@@ -19,13 +20,13 @@ export class Transport {
     const item=await this.rest(`/items/${this.context.itemId}`);if(item.project!==this.context.projectId)throw Error('Selected item is in a different project.');
     const attachments=await this.attachments(), linked=new Set(attachments.map(a=>a.id));
     const candidates=attachments.filter(a=>a.fields?.name?.startsWith('JHMV manifest v1 '));if(candidates.length>30)throw Error('Archive older manifest associations; at most 30 runs are supported.');const runs=[];
-    for(const candidate of candidates){const meta=await this.rest(`/attachments/${candidate.id}`);const m=JSON.parse(new TextDecoder().decode(await this.file(meta,this.config.maxManifestBytes)));validate(m,this.config,this.context);if(meta.fields.name!=='JHMV manifest v1 '+m.runId||!m.assets.every(a=>linked.has(a.attachmentId)))throw Error('Manifest association differs.');runs.push(m);}
+    for(const candidate of candidates){const meta=await this.rest(`/attachments/${candidate.id}`);let data=await this.file(meta,this.config.maxManifestBytes);if(meta.fileName.endsWith('.json.zip'))data=unpack(data,meta.fileName.slice(0,-4),this.config.maxManifestBytes);const m=JSON.parse(new TextDecoder().decode(data));validate(m,this.config,this.context);if(meta.fields.name!=='JHMV manifest v1 '+m.runId||!m.assets.every(a=>linked.has(a.attachmentId)))throw Error('Manifest association differs.');runs.push(m);}
     runs.sort((a,b)=>b.publishedAt.localeCompare(a.publishedAt)||b.runId.localeCompare(a.runId));return {item:{id:item.id,name:item.fields.name,documentKey:item.documentKey||String(item.id)},runs};
   }
   async asset(run,asset){let data;if(this.config.mode==='adapter')data=await this.post('/api/asset',{runId:run.runId,name:asset.name},Math.min(asset.bytes,this.config.maxFileBytes));else{
     // Revalidate permissions and current attachment association for every read.
     const item=await this.rest(`/items/${this.context.itemId}`), attached=await this.attachments();if(item.project!==this.context.projectId||!attached.some(a=>a.id===asset.attachmentId))throw Error('Artifact is no longer associated with the selected item.');
-    const meta=await this.rest(`/attachments/${asset.attachmentId}`);if(meta.fileName!==asset.name||meta.fields.attachment!==asset.fileId)throw Error('Artifact identity differs.');data=await this.file(meta,Math.min(asset.bytes,this.config.maxFileBytes));}
+    const meta=await this.rest(`/attachments/${asset.attachmentId}`);const storage=asset.storage;if(meta.fileName!==(storage?.name||asset.name)||meta.fields.attachment!==asset.fileId)throw Error('Artifact identity differs.');data=await this.file(meta,Math.min(storage?.bytes||asset.bytes,this.config.maxFileBytes));if(storage){const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),x=>x.toString(16).padStart(2,'0')).join('');if(hash!==storage.sha256||data.length!==storage.bytes)throw Error('ZIP container has changed.');data=unpack(data,asset.name,this.config.maxFileBytes,asset.bytes);}}
     const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',data)),x=>x.toString(16).padStart(2,'0')).join('');if(data.length!==asset.bytes||hash!==asset.sha256)throw Error('Published artifact has changed.');return data;
   }
 }
@@ -34,6 +35,7 @@ export function validate(m,c,ctx){
   const b=m.binding;if(b.jamaOrigin!==c.jamaOrigin||b.projectId!==ctx.projectId||b.itemId!==ctx.itemId||b.summaryId!==ctx.itemId)throw Error('Manifest belongs to a different Jama item.');
   if(!['Y','Z'].includes(m.upAxis)||!['mm','cm','m','in','ft'].includes(m.units)||!Array.isArray(m.assets)||!m.assets.length||m.assets.length>100)throw Error('Invalid model metadata.');
   const names=new Set(),ids=new Set();for(const a of m.assets){if(typeof a.name!=='string'||!a.name||/[\\/:]/.test(a.name)||names.has(a.name)||!Number.isInteger(a.attachmentId)||a.attachmentId<1||ids.has(a.attachmentId)||!Number.isInteger(a.fileId)||a.fileId<1||!Number.isInteger(a.bytes)||a.bytes<1||a.bytes>c.maxFileBytes||!/^[0-9a-f]{64}$/.test(a.sha256)||!['model','source','animation','poster','drawing','document'].includes(a.role))throw Error('Invalid artifact metadata.');names.add(a.name);ids.add(a.attachmentId);}
-  if(m.assets.filter(a=>a.role==='model').length!==1)throw Error('Expected one model preview.');
+  const models=m.assets.filter(a=>a.role==='model').length;if(models<1||models>20)throw Error('Expected 1 to 20 model previews.');
   for(const a of m.assets){if(a.role==='model'&&!/\.(glb|3mf)$/i.test(a.name))throw Error('Unsupported model preview.');if(['drawing','poster'].includes(a.role)&&!['image/png','image/jpeg'].includes(a.mime))throw Error('Unsafe image format.');if(a.role==='animation'&&(a.mime!=='image/gif'||!m.assets.some(p=>p.name===a.poster&&p.role==='poster')))throw Error('Animation poster is missing.');}
+  for(const a of m.assets)if(a.storage&&(a.storage.encoding!=='zip'||a.storage.name!==a.name+'.zip'||!Number.isInteger(a.storage.bytes)||a.storage.bytes<1||a.storage.bytes>c.maxFileBytes||!/^[0-9a-f]{64}$/.test(a.storage.sha256)))throw Error('Invalid ZIP storage metadata.');
 }

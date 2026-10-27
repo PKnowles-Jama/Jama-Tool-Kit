@@ -1,5 +1,5 @@
 import * as THREE from './vendor/three/build/three.module.js';
-import {OrbitControls} from './vendor/three/examples/jsm/controls/OrbitControls.js';
+import {TrackballControls} from './vendor/three/examples/jsm/controls/TrackballControls.js';
 import {GLTFLoader} from './vendor/three/examples/jsm/loaders/GLTFLoader.js';
 import {ThreeMFLoader} from './vendor/three/examples/jsm/loaders/3MFLoader.js';
 
@@ -8,7 +8,12 @@ export class ModelView {
     this.wrap=wrap;this.config=config;this.active=true;this.disposed=false;
     this.renderer=new THREE.WebGLRenderer({canvas,antialias:true,preserveDrawingBuffer:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio,2));
     this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#e7eef3');
-    this.camera=new THREE.PerspectiveCamera(38,1,.01,1000);this.controls=new OrbitControls(this.camera,canvas);this.controls.enableDamping=false;
+    this.camera=new THREE.PerspectiveCamera(38,1,.01,1000);this.camera.position.set(3,2.2,3);
+    this.controls=new TrackballControls(this.camera,canvas);this.controls.staticMoving=true;this.controls.rotateSpeed=3;
+    this.interacting=false;this.frame=null;
+    const tick=()=>{this.frame=null;if(this.disposed||!this.active||document.hidden)return;this.controls.update();if(this.interacting)this.frame=requestAnimationFrame(tick);};
+    this.controls.addEventListener('start',()=>{this.interacting=true;if(this.frame===null)this.frame=requestAnimationFrame(tick);});
+    this.controls.addEventListener('end',()=>{this.interacting=false;this.controls.update();});
     this.scene.add(new THREE.HemisphereLight(0xffffff,0x607080,2.5));const light=new THREE.DirectionalLight(0xffffff,3);light.position.set(3,5,4);this.scene.add(light);
     this.controls.addEventListener('change',()=>this.render());this.resize=new ResizeObserver(()=>this.render());this.resize.observe(wrap);
   }
@@ -35,11 +40,12 @@ export class ModelView {
     if(run.upAxis==='Z')object.rotation.x=-Math.PI/2;
     object.updateMatrixWorld(true);const box=new THREE.Box3().setFromObject(object),size=box.getSize(new THREE.Vector3()),extent=Math.max(size.x,size.y,size.z);
     if(!Number.isFinite(extent)||extent<=0){disposeObject(object);throw Error('Model has no visible geometry.');}
-    const center=box.getCenter(new THREE.Vector3());object.position.sub(center);object.scale.multiplyScalar(2/extent);object.position.multiplyScalar(2/extent);this.scene.add(object);this.object=object;this.view('iso');
+    const center=box.getCenter(new THREE.Vector3());object.position.sub(center);object.scale.multiplyScalar(2/extent);object.position.multiplyScalar(2/extent);
+    this.orientation=new THREE.Group();this.orientation.add(object);this.scene.add(this.orientation);this.object=object;this.view('iso');
   }
+  rotate(angles){if(this.orientation){this.orientation.rotation.set(...['x','y','z'].map(axis=>THREE.MathUtils.degToRad(angles[axis])));this.render();}}
   view(name){const directions={iso:[3,2.2,3],front:[0,0,4],top:[0,4,.001],right:[4,0,0],fit:[3,2.2,3]};this.camera.up.set(0,1,0);this.camera.position.set(...directions[name]);this.controls.target.set(0,0,0);this.controls.update();this.render();}
-  render(){if(!this.active||this.disposed||document.hidden)return;const w=this.wrap.clientWidth,h=this.wrap.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h,false);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.renderer.render(this.scene,this.camera);}
-  sheet(){const sheet=document.createElement('canvas');sheet.width=1600;sheet.height=1240;const ctx=sheet.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,1600,1240);ctx.fillStyle='#193043';ctx.font='24px sans-serif';ctx.fillText('Undimensioned visualization · Isometric / Front / Top / Right',24,36);const old=this.camera.position.clone();let n=0;for(const name of ['iso','front','top','right']){this.view(name);const x=(n%2)*800,y=Math.floor(n/2)*580+60;ctx.drawImage(this.renderer.domElement,x,y,800,530);ctx.fillStyle='#193043';ctx.fillText(name.toUpperCase(),x+20,y+560);n++;}this.camera.position.copy(old);this.controls.update();this.render();return new Promise(resolve=>sheet.toBlob(resolve,'image/png'));}
-  dispose(){this.disposed=true;this.resize.disconnect();this.controls.dispose();if(this.object)disposeObject(this.object);this.renderer.dispose();}
+  render(){if(!this.active||this.disposed||document.hidden)return;const w=this.wrap.clientWidth,h=this.wrap.clientHeight;if(!w||!h)return;this.renderer.setSize(w,h,false);this.camera.aspect=w/h;this.camera.updateProjectionMatrix();this.controls.handleResize();this.renderer.render(this.scene,this.camera);}
+  dispose(){this.disposed=true;if(this.frame!==null)cancelAnimationFrame(this.frame);this.resize.disconnect();this.controls.dispose();if(this.object)disposeObject(this.object);this.renderer.dispose();}
 }
 function disposeObject(object){object.traverse(n=>{n.geometry?.dispose();for(const m of Array.isArray(n.material)?n.material:(n.material?[n.material]:[])){for(const value of Object.values(m))if(value?.isTexture){value.image?.close?.();value.dispose();}m.dispose();}});}

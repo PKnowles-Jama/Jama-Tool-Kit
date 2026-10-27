@@ -11,6 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'.test-deps'),str(ROOT/'src')]
 from playwright.sync_api import sync_playwright,expect
 from jama_model_viewer.core import read_json
+from jama_model_viewer.archive import pack
 
 config=read_json(ROOT/'config/viewer.example.json')
 config.update(jamaOrigin='https://jama.test',publicOrigin='https://viewer.test')
@@ -23,7 +24,7 @@ window.addEventListener('message',e=>{if(e.origin!=='https://viewer.test')return
 
 with sync_playwright() as p:
     browser=p.chromium.launch(channel='chrome',headless=True,args=['--use-angle=swiftshader','--enable-unsafe-swiftshader'])
-    for mode,format in (('adapter','glb'),('static','glb'),('adapter','3mf')):
+    for mode,format,count in (('adapter','glb',1),('static','glb',1),('adapter','3mf',1),('adapter','glb',2)):
         c=browser.new_context(viewport={'width':1200,'height':1000})
         state={'expire':False,'reads':0,'requests':[]}
         manifest=copy.deepcopy(base)
@@ -34,10 +35,20 @@ with sync_playwright() as p:
         if format=='3mf':
             a=manifest['assets'][0];data=(ROOT/'frontend/demo/demo.3mf').read_bytes();a.update(name='demo.3mf',bytes=len(data),sha256=hashlib.sha256(data).hexdigest(),mime='model/3mf');manifest.update(revision='Synthetic 3MF test',units='mm')
         blobs={a['name']: (rocket.read_bytes() if a['name']=='rocket-preview.glb' else (ROOT/'frontend/demo'/a['name']).read_bytes()) for a in manifest['assets']}
+        if count==2:
+            for role,new_name,new_id in [('model','second.glb',20),('animation','second.gif',21)]:
+                original=next(a for a in manifest['assets'] if a['role']==role)
+                extra={**original,'name':new_name,'attachmentId':new_id,'fileId':new_id}
+                manifest['assets'].append(extra);blobs[new_name]=blobs[original['name']]
+        for a in manifest['assets']:
+            if a['role']=='model':
+                zipped=pack(blobs[a['name']],a['name']);storage_name=a['name']+'.zip'
+                a['storage']={'encoding':'zip','name':storage_name,'bytes':len(zipped),'sha256':hashlib.sha256(zipped).hexdigest()}
+                blobs[storage_name]=zipped
         manifest_name='jhmv-'+manifest['runId']+'.json'
-        blobs[manifest_name]=json.dumps(manifest).encode()
-        metadata={a['attachmentId']:{'id':a['attachmentId'],'project':53,'fileName':a['name'],'fileSize':a['bytes'],'fields':{'attachment':a['fileId'],'name':'JHMV asset'}} for a in manifest['assets']}
-        metadata[10]={'id':10,'project':53,'fileName':manifest_name,'fileSize':len(blobs[manifest_name]),'fields':{'attachment':10,'name':'JHMV manifest v1 '+manifest['runId']}}
+        blobs[manifest_name+'.zip']=pack(json.dumps(manifest).encode(),manifest_name)
+        metadata={a['attachmentId']:{'id':a['attachmentId'],'project':53,'fileName':a.get('storage',{}).get('name',a['name']),'fileSize':a.get('storage',{}).get('bytes',a['bytes']),'fields':{'attachment':a['fileId'],'name':'JHMV asset'}} for a in manifest['assets']}
+        metadata[10]={'id':10,'project':53,'fileName':manifest_name+'.zip','fileSize':len(blobs[manifest_name+'.zip']),'fields':{'attachment':10,'name':'JHMV manifest v1 '+manifest['runId']}}
         def handle(route):
             request=route.request;u=urlsplit(request.url);path=u.path
             headers={'Access-Control-Allow-Origin':'https://viewer.test','Access-Control-Allow-Headers':'authorization','Access-Control-Allow-Methods':'GET, OPTIONS'}
@@ -70,7 +81,21 @@ with sync_playwright() as p:
         page.goto('https://jama.test/host')
         frame=page.frame_locator('#tool')
         expect(frame.locator('#status')).to_have_text(re.compile('^Model ready'),timeout=30000)
-        page.screenshot(path=str(ROOT/'tests/output'/f'integration-{mode}-{format}.png'),full_page=True)
+        assert frame.locator('#model-section details').count()==(2 if count==2 else 0)
+        assert frame.locator('#animations-section details').count()==(2 if count==2 else 0)
+        if count==2:
+            second=frame.locator('#models details').nth(1)
+            second.locator('summary').click()
+            expect(second.get_by_role('slider',name='X rotation',exact=True)).to_be_enabled(timeout=30000)
+            frame.locator('#animations-section > summary').click()
+            gifs=frame.locator('#animations details')
+            gifs.nth(0).locator('summary').click();gifs.nth(1).locator('summary').click()
+            expect(gifs.nth(1).locator('img')).to_have_attribute('src',re.compile('^blob:'))
+            gifs.nth(1).get_by_role('button',name='Play',exact=True).click()
+            # Closing one GIF must stop it without closing its sibling.
+            gifs.nth(1).locator('summary').click()
+            assert gifs.nth(0).evaluate('(e)=>e.open')
+        page.screenshot(path=str(ROOT/'tests/output'/f'integration-{mode}-{format}-{count}.png'),full_page=True)
         frame.get_by_role('button',name='Open larger view').click()
         drawer=page.frame_locator('#drawer')
         expect(drawer.locator('#status')).to_have_text(re.compile('^Model ready'),timeout=30000)

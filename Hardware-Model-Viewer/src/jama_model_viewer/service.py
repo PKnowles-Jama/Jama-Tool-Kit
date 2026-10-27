@@ -78,7 +78,11 @@ class Reader:
             meta = self.get(f"/attachments/{positive(candidate['id'])}")
             if meta['project'] != project:
                 raise Rejected(403, 'Manifest project differs')
-            m = json.loads(self.file(meta, self.config['maxManifestBytes']))
+            data = self.file(meta, self.config['maxManifestBytes'])
+            if meta['fileName'].endswith('.json.zip'):
+                from .archive import unpack
+                data = unpack(data, meta['fileName'][:-4], self.config['maxManifestBytes'])
+            m = json.loads(data)
             validate_manifest(m, {'jamaOrigin': self.base, 'projectId': project, 'itemId': item_id, 'summaryId': item_id})
             if meta['fields']['name'] != MANIFEST_PREFIX + m['runId']:
                 raise ValueError('Manifest title and run ID differ')
@@ -101,10 +105,16 @@ class Reader:
         if not asset:
             raise Rejected(404, 'Artifact is not part of the selected published run')
         meta = self.get(f"/attachments/{asset['attachmentId']}")
+        storage = asset.get('storage')
         if (meta['project'] != payload['projectId'] or meta['fields'].get('attachment') != asset['fileId']
-                or meta.get('fileName') != asset['name']):
+                or meta.get('fileName') != (storage['name'] if storage else asset['name'])):
             raise Rejected(403, 'Artifact binding differs')
-        data = self.file(meta, min(asset['bytes'], self.config['maxFileBytes']))
+        data = self.file(meta, min(storage['bytes'] if storage else asset['bytes'], self.config['maxFileBytes']))
+        if storage:
+            if len(data) != storage['bytes'] or digest(data) != storage['sha256']:
+                raise ValueError('Published ZIP container has changed')
+            from .archive import unpack
+            data = unpack(data, asset['name'], self.config['maxFileBytes'], asset['bytes'])
         if len(data) != asset['bytes'] or digest(data) != asset['sha256']:
             raise ValueError('Published artifact has changed')
         return data, asset['mime']

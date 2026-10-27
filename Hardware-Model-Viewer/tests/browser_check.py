@@ -30,19 +30,24 @@ with sync_playwright() as p:
     page.goto(f'http://127.0.0.1:{server.server_port}/spa?demo=1')
     expect(page.locator('#status')).to_have_text(re.compile('^Model ready'),timeout=30000)
     assert page.locator('canvas').evaluate('(c)=>c.width>0&&c.height>0')
+    assert page.locator('#model-section details').count()==0
+    assert page.locator('#animations-section details').count()==0
+    assert page.locator('#drawings-section').count()==0
+    assert page.get_by_role('button',name='Save four-view illustration').count()==0
+    for axis in ('X','Y','Z'):
+        before=page.locator('canvas').screenshot()
+        slider=page.get_by_role('slider',name=axis+' rotation',exact=True)
+        slider.evaluate("e=>{e.value='45';e.dispatchEvent(new Event('input',{bubbles:true}));}")
+        assert page.locator('canvas').screenshot()!=before,axis+' rotation did not change the rendered model'
+        page.get_by_role('button',name='Fit / reset',exact=True).click()
+        expect(slider).to_have_value('0')
     page.locator('#animations-section > summary').click()
-    page.locator('#animations .asset-card > summary').click()
     expect(page.locator('#animations img')).to_have_attribute('src',re.compile('^blob:'))
     page.get_by_role('button',name='Play',exact=True).click()
     page.wait_for_timeout(300)
     gif_src=page.locator('#animations img').get_attribute('src')
     page.get_by_role('button',name='Stop',exact=True).click()
     assert page.locator('#animations img').get_attribute('src')!=gif_src
-    page.locator('#drawings-section > summary').click()
-    page.locator('#drawings .asset-card > summary').click()
-    expect(page.locator('#drawings img')).to_have_attribute('src',re.compile('^blob:'))
-    page.get_by_role('button',name='Zoom in',exact=True).click()
-    assert '125%' in page.locator('#drawings img').get_attribute('style')
     page.get_by_role('button',name='Top',exact=True).click()
     page.screenshot(path=str(out/'viewer-desktop.png'),full_page=True)
     page.set_viewport_size({'width':390,'height':844})
@@ -53,7 +58,7 @@ with sync_playwright() as p:
     assert not page.locator('#model-section').evaluate('(e)=>e.open')
     assert not errors,errors
     assert not external,external
-    (out/'browser-results.json').write_text(json.dumps({'passed':True,'pageErrors':errors,'externalRequests':external,'checks':['GLB render','GIF poster/play/stop','drawing zoom','standard camera','collapsible model','mobile dark layout','no external network']},indent=2))
+    (out/'browser-results.json').write_text(json.dumps({'passed':True,'pageErrors':errors,'externalRequests':external,'checks':['GLB render','single-item expanders','GIF poster/play/stop','X/Y/Z rotation changes rendered pixels','reset rotation','drawing UI absent','standard camera','collapsible model','mobile dark layout','no external network']},indent=2))
     browser.close()
 server.shutdown()
 print('Browser checks passed without external network access.')

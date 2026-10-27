@@ -26,6 +26,7 @@ def package(name, version):
 
 three = package('three', '0.180.0')
 paths = ['build/three.module.js', 'build/three.core.js', 'examples/jsm/controls/OrbitControls.js',
+         'examples/jsm/controls/TrackballControls.js',
          'examples/jsm/loaders/GLTFLoader.js', 'examples/jsm/loaders/3MFLoader.js', 'LICENSE']
 done = set()
 while paths:

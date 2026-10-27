@@ -9,7 +9,7 @@ def main():
     sub = parser.add_subparsers(dest='command', required=True)
     p = sub.add_parser('prepare', help='Package exported artifacts after summary publication')
     p.add_argument('--run', type=Path, required=True)
-    p.add_argument('--model', type=Path, required=True)
+    p.add_argument('--model', type=Path, required=True, action='append', help='Repeat for multiple models')
     for option in ('source', 'gif', 'drawing', 'document'):
         p.add_argument('--' + option, type=Path, action='append', default=[])
     p.add_argument('--revision', required=True)

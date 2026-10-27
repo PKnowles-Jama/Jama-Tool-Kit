@@ -116,6 +116,15 @@ class Packages(unittest.TestCase):
         m=read_json(ROOT/'frontend/demo/manifest.json')
         binding=copy.deepcopy(m['binding']);binding['itemId']=2
         with self.assertRaises(ValueError):validate_manifest(m,binding)
+    def test_multiple_models(self):
+        m=read_json(ROOT/'frontend/demo/manifest.json')
+        second={**m['assets'][0],'name':'second.glb','attachmentId':20,'fileId':20}
+        m['assets'].append(second)
+        self.assertEqual(len([a for a in validate_manifest(m)['assets'] if a['role']=='model']),2)
+    def test_no_models_rejected(self):
+        m=read_json(ROOT/'frontend/demo/manifest.json')
+        m['assets']=[a for a in m['assets'] if a['role']!='model']
+        with self.assertRaises(ValueError):validate_manifest(m)
     def test_wrong_project_stops_publication(self):
         jama=FakeJama()
         with patch.object(jama,'get',return_value={'project':99}):
@@ -124,6 +133,25 @@ class Packages(unittest.TestCase):
 
 
 class Bounds(unittest.TestCase):
+    def test_zip_deterministic_and_bounded(self):
+        from jama_model_viewer.archive import pack, unpack
+        data=pack(b'preview','model.glb')
+        self.assertEqual(data,pack(b'preview','model.glb'))
+        self.assertEqual(unpack(data,'model.glb',10,7),b'preview')
+        with self.assertRaises(ValueError):unpack(data,'another.glb',10)
+        with self.assertRaises(ValueError):unpack(data,'model.glb',5)
+        with self.assertRaises(ValueError):unpack(data,'model.glb',10,6)
+    def test_reader_decodes_only_bound_zip_asset(self):
+        from jama_model_viewer.archive import pack
+        m=read_json(ROOT/'frontend/demo/manifest.json');a=m['assets'][0]
+        original=(ROOT/'frontend/demo/demo.glb').read_bytes();stored=pack(original,a['name'])
+        a['storage']={'encoding':'zip','name':a['name']+'.zip','bytes':len(stored),'sha256':digest(stored)}
+        r=Reader({'jamaOrigin':FakeJama.base,'maxFileBytes':52428800},'test')
+        meta={'project':53,'fileName':a['storage']['name'],'fields':{'attachment':a['fileId']}}
+        with patch.object(r,'context',return_value={'runs':[m]}),patch.object(r,'get',return_value=meta),patch.object(r,'file',return_value=stored):
+            data,mime=r.asset({'projectId':53,'itemId':1,'runId':m['runId'],'name':a['name']})
+            self.assertEqual(data,original)
+            self.assertEqual(mime,'model/gltf-binary')
     def test_counted_attachment_pagination(self):
         r=Reader({'jamaOrigin':FakeJama.base,'maxAttachments':500},'test')
         payload=json.dumps({'data':[{'id':1}],'meta':{'pageInfo':{'startIndex':0,'totalResults':1}}}).encode()

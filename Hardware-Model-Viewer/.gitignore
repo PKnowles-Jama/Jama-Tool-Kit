@@ -5,3 +5,4 @@ config/local.json
 dist/
 tests/output/
 *.log
+/deploy/Caddyfile.local

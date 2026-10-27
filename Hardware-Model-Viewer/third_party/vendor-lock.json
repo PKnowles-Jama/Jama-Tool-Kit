@@ -38,6 +38,10 @@
         "sha256": "b45cb15fd75ac22aef3a44828b8b615c7b6d2256e203b7803c120975fe36cd47"
       },
       {
+        "path": "frontend/vendor/three/examples/jsm/controls/TrackballControls.js",
+        "sha256": "ae3382a0cdbc4cec890a763d928cc663f12625d767f35e03d03505996ab1c458"
+      },
+      {
         "path": "frontend/vendor/three/examples/jsm/libs/fflate.module.js",
         "sha256": "209a4412eb48ce609edb4391992a792ffcc3983d30ee7e2b0b89a8c470f3cd8a"
       },

@@ -1,6 +1,6 @@
 # Jama Hardware Model Viewer
 
-An independent OSLC iframe and optional Jama drawer for browser-rendered models, GIF animations, and expandable isometric/three-view drawings. Assets stay attached to the Implementation Summary; the viewer uses the active Jama user's delegated access. The publishing CLI runs separately after REQHW-TXT-5 step 6.
+An independent OSLC iframe and optional Jama drawer for browser-rendered models and GIF animations. Assets stay attached to the Implementation Summary; the viewer uses the active Jama user's delegated access. The publishing CLI runs separately after REQHW-TXT-5 step 6.
 
 No model-rendering server, Docker, viewing SaaS, or runtime CDN is required. The supplied adapter runs as a normal Python process behind HTTPS. A static mode is included for Jama installations that permit authenticated browser attachment access.
 
@@ -25,19 +25,21 @@ For Jama, set `publicOrigin`, `jamaOrigin`, and `allowedProjectIds` in `config/l
 
 Finish the existing `publish_summary.py --apply` workflow first. Its `publish-state.json` must contain `complete: true`, a numeric `summaryId`, and `pending: null`. Keep `summary-plan.json` and `coverage.json` in the same run folder. The display target in this release is that verified Implementation Summary; arbitrary target-item mapping is not enabled.
 
-Export a self-contained, uncompressed `.glb` without glTF extensions, or a `.3mf` mesh preview. Preserve original STEP/3MF CAD as a source download. A GLB uses meters and Y-up by specification; native 3MF exports may use Z-up. Explicitly record the actual preview units and orientation. Match all model, animation, and drawing files to the same CAD revision. Meshes are visualization evidence, not a replacement for the analysis report or original solid geometry.
+Export a self-contained, uncompressed `.glb` without glTF extensions, or a `.3mf` mesh preview. Preserve original STEP/3MF CAD as a source download. A GLB uses meters and Y-up by specification; native 3MF exports may use Z-up. Explicitly record the actual preview units and orientation. Match model and animation files to the same CAD revision, or label supplemental revisions explicitly. Meshes are visualization evidence, not a replacement for the analysis report or original solid geometry.
 
 ```powershell
 $run = 'C:\path\Requirements-to-Hardware-Run-2026-10-27'
-python viewer.py prepare --run $run --model "$run\preview.glb" --source "$run\model.step" --gif "$run\motion.gif" --drawing "$run\four-view.png" --document "$run\drawing.pdf" --revision 'CAD revision 1' --units m --up-axis Y --projection third-angle --drawing-kind cad-drawing
+python viewer.py prepare --run $run --model "$run\preview.glb" --source "$run\model.step" --gif "$run\motion.gif" --revision 'CAD revision 1' --units m --up-axis Y
 python viewer.py validate --run $run
 python viewer.py publish --run $run --credentials '..\..\Requirements-to-Hardware\Scripts\info.json' --preflight
 python viewer.py publish --run $run --credentials '..\..\Requirements-to-Hardware\Scripts\info.json' --apply
 ```
 
-`--source`, `--gif`, `--drawing`, and `--document` may repeat; omit absent artifacts. `prepare` creates a PNG poster for each GIF. Drawings accept PNG/JPEG previews, with optional PDF originals via `--document`. A sheet should contain isometric/front/top/right views and the correct first-angle or third-angle projection. Use `--drawing-kind undimensioned-visualization` for illustrations without CAD dimensions/tolerances. The browser's **Save four-view illustration** action produces a labeled undimensioned image for later publication. It does not update Jama automatically.
+`--model`, `--source`, and `--gif` may repeat; omit absent optional artifacts. Up to 20 model previews can share a run. `prepare` creates a PNG poster for each GIF. A single model or GIF is shown directly inside its section expander; two or more receive individual nested expanders. Legacy drawing/document manifest entries and command-line options remain readable for older packages, but the viewer does not display drawings or provide a drawing export action.
 
 The package is saved under `<run>\viewer`. Preparation refuses to overwrite an existing package. Publication uses a separate `<run>\viewer-publish-state.json`, never recreates the summary, and never changes source features or requirements. `--preflight` makes authenticated reads only; actual upload permissions and accepted binary types are enforced by Jama during `--apply`. A preflight cannot prove write permission without writing.
+
+Jama Cloud rejects direct `.glb` attachment uploads. The publisher stores GLB, 3MF, STEP/STP, and manifest JSON in deterministic ZIP containers. The manifest records both the original-file and stored-ZIP hashes. The viewer validates and extracts the single bounded entry before rendering or downloading it; GIF and drawing images remain ordinary attachments. Existing direct publications remain readable. After updating from an earlier viewer version, restart the Python adapter so it can read these containers, then reload the Jama OSLC view.
 
 For a different Jama instance, provide `--base-url https://YOUR-JAMA-ORIGIN` and collect the source workflow there. A package is bound to its original instance/project/summary; changing only the connection cannot redirect it. Use OAuth environment variables instead of a credential file if preferred: `JAMA_CLIENT_ID` and `JAMA_CLIENT_SECRET`. Never put publisher credentials in viewer configuration or browser files.
 
@@ -51,17 +53,11 @@ node scripts/convert-step.cjs 'C:\path\model.step' 'C:\path\preview.glb'
 
 The bundled `occt-import-js` converter runs offline, outputs meters/Y-up, preserves per-mesh base colors, and writes a conversion record beside the GLB. It limits input to 50 MiB, conversion to 120 seconds, and output to one million triangles. The output directory must exist; existing output files are not overwritten. Verify component positions, dimensions, colors, and orientation against CAD before publishing. Face-level styling and CAD feature history are not preserved. The original STEP remains downloadable via `--source`.
 
-If a CAD drawing export is unavailable, create the fallback illustration before `prepare`:
-
-```powershell
-python viewer.py draw --model "$run\preview.glb" --output "$run\four-view.png" --up-axis Y --projection third-angle
-```
-
-Then prepare with `--drawing-kind undimensioned-visualization`. This local Pillow renderer handles baseline triangle GLB geometry and node placements, with a 100,000-triangle drawing limit. It produces labeled orthographic views without dimensions/tolerances or CAD hidden-line removal; use CAD-produced drawings when those properties matter.
+STEP-derived previews preserve geometry and supported base colors, not Fusion image decals. The REQHW-SUM-11 source records one Jama logo decal, but its STEP-derived GLB contains no images or textures. For logos, publish a GLB with the CAD appearances baked into embedded image textures; the viewer can display standard embedded glTF textures. The logo cannot be recovered from a STEP file that omitted it.
 
 ## Viewer behavior
 
-The model, animations, and drawings have independent collapsible sections. The model supports orbit, pan, zoom, fit, and standard camera views. GIFs use generated posters, explicit Play/Stop buttons, and stop when collapsed or when the page is hidden. Drawings support zoom and drag-to-pan. The viewer loads the latest complete run on open or Refresh and provides a run selector. There is no unsaved CAD synchronization or in-browser CAD editing.
+Models and animations have independent collapsible sections, with nested expanders only when a section contains multiple items. Models support unrestricted trackball rotation, explicit X/Y/Z rotation sliders, pan, zoom, fit/reset, and standard camera views. Each model has independent controls. GIFs use generated posters, explicit Play/Stop buttons, and stop when collapsed or when the page is hidden. The viewer loads the latest complete run on open or Refresh and provides a run selector. There is no unsaved CAD synchronization or in-browser CAD editing.
 
 Artifacts are fetched with the user's delegated token, bounded, verified against their SHA-256, and kept in temporary browser memory. Expired/denied reads clear content. Model rendering runs only on changes while visible; no continuous render loop is used. A lack of WebGL displays an error while keeping source downloads usable.
 

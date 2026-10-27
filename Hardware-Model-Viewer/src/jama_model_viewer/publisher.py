@@ -3,10 +3,11 @@ import copy
 import json
 import shutil
 import uuid
+import io
 from datetime import datetime, timezone
 from pathlib import Path
 from .core import (MANIFEST_PREFIX, digest, inspect_file, local_file, origin, positive,
-                   read_json, save_json, validate_manifest, attachment_url)
+                   read_json, save_json, validate_manifest, attachment_url, MAX_FILE)
 
 
 def now():
@@ -28,7 +29,8 @@ def prepare(args):
     folder = run / 'viewer'
     if (folder / 'manifest.prepared.json').exists():
         raise ValueError('Package already exists; validate or resume it rather than overwrite')
-    inputs = [(args.model, 'model')] + [(p, 'source') for p in args.source] + [(p, 'animation') for p in args.gif] + [(p, 'drawing') for p in args.drawing] + [(p, 'document') for p in args.document]
+    models = args.model if isinstance(args.model, list) else [args.model]
+    inputs = [(p, 'model') for p in models] + [(p, 'source') for p in args.source] + [(p, 'animation') for p in args.gif] + [(p, 'drawing') for p in args.drawing] + [(p, 'document') for p in args.document]
     names = [p.name.casefold() for p, _ in inputs]
     if len(set(names)) != len(names):
         raise ValueError('Artifact filenames must be unique')
@@ -84,6 +86,22 @@ def publish_one(jama, binding, file, asset, title, state, ledger):
     entry = state.setdefault('uploads', {}).setdefault(asset['name'], {'sha256': asset['sha256'], 'pending': None})
     if entry['sha256'] != asset['sha256']:
         raise ValueError('Ledger content differs from package')
+    storage = entry.get('storage')
+    upload_data = file.read_bytes()
+    # ZIP is a supported attachment format on Cloud, while GLB/STEP/JSON may not be.
+    # Already-confirmed direct uploads retain their original representation.
+    if storage or (not entry.get('uploaded') and file.suffix.lower() in ('.glb', '.3mf', '.step', '.stp', '.json')):
+        from .archive import pack
+        upload_data = pack(upload_data, asset['name'])
+        proposed = {'encoding': 'zip', 'name': asset['name'] + '.zip',
+                    'bytes': len(upload_data), 'sha256': digest(upload_data)}
+        if storage and storage != proposed:
+            raise ValueError('ZIP representation differs from the publication ledger')
+        storage = proposed
+    upload_name = storage['name'] if storage else asset['name']
+    upload_mime = 'application/zip' if storage else asset['mime']
+    if len(upload_data) > MAX_FILE:
+        raise ValueError('Stored artifact including ZIP overhead exceeds 50 MiB')
     if not entry.get('attachmentId'):
         if entry['pending']:
             raise ValueError('Attachment creation unresolved: reconcile by exact title and ID; see README')
@@ -100,16 +118,17 @@ def publish_one(jama, binding, file, asset, title, state, ledger):
     if not entry.get('uploaded'):
         entry['pending'] = 'upload'
         save_json(ledger, state)
-        with file.open('rb') as stream:
-            jama.request('PUT', f'/attachments/{aid}/file', files={'file': (asset['name'], stream, asset['mime'])})
+        jama.request('PUT', f'/attachments/{aid}/file', files={'file': (upload_name, io.BytesIO(upload_data), upload_mime)})
         metadata = jama.get(f'/attachments/{aid}')
-    if metadata.get('fileName') != asset['name'] or metadata.get('fileSize') != asset['bytes']:
+    if metadata.get('fileName') != upload_name or metadata.get('fileSize') != len(upload_data):
         raise ValueError('Uploaded attachment metadata differs')
     url = attachment_url(jama.base, metadata)
     data = jama.request('GET', '/files', params={'url': url}, raw=True).content
-    if digest(data) != asset['sha256']:
+    if digest(data) != digest(upload_data):
         raise ValueError('Uploaded attachment bytes differ')
     entry.update(uploaded=True, fileId=metadata['fields']['attachment'])
+    if storage:
+        entry['storage'] = storage
     if entry['pending'] != 'associate':
         entry['pending'] = None
     save_json(ledger, state)
@@ -124,7 +143,10 @@ def publish_one(jama, binding, file, asset, title, state, ledger):
             raise RuntimeError('Attachment association could not be verified')
     entry['pending'] = None
     save_json(ledger, state)
-    return {**asset, 'attachmentId': aid, 'fileId': entry['fileId']}
+    result = {**asset, 'attachmentId': aid, 'fileId': entry['fileId']}
+    if storage:
+        result['storage'] = storage
+    return result
 
 
 def publish(args, jama):

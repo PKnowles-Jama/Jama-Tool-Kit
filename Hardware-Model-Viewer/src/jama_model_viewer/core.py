@@ -156,8 +156,14 @@ def validate_manifest(m, binding=None, published=True):
             if aid in ids:
                 raise ValueError('Duplicate attachment ID')
             ids.add(aid)
-    if sum(a['role'] == 'model' for a in m['assets']) != 1:
-        raise ValueError('Expected exactly one model preview')
+            if a.get('storage'):
+                storage = a['storage']
+                if storage['encoding'] != 'zip' or storage['name'] != a['name'] + '.zip':
+                    raise ValueError('Unsupported asset storage container')
+                if not 0 < positive(storage['bytes']) <= MAX_FILE or not re.fullmatch(r'[0-9a-f]{64}', storage['sha256']):
+                    raise ValueError('Invalid ZIP storage length or hash')
+    if not 1 <= sum(a['role'] == 'model' for a in m['assets']) <= 20:
+        raise ValueError('Expected 1 to 20 model previews')
     for a in m['assets']:
         if a['role'] == 'model' and Path(a['name']).suffix.lower() not in ('.glb', '.3mf'):
             raise ValueError('Unsupported model preview')
